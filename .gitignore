@@ -1,0 +1,9 @@
+# LaTeX and BibTeX temporary files
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.toc
+
+main.pdf

@@ -1,0 +1,157 @@
+% \documentclass[anon]{colt2016} % Anonymized submission
+\documentclass{colt2016} % Include author names
+
+\usepackage[nolist]{acronym}
+\usepackage{algorithm,algorithmic}
+\usepackage{times}
+\usepackage{enumerate}
+
+\DeclareMathOperator*{\Exp}{\mathbf{E}}
+\DeclareMathOperator{\Regret}{Regret}
+\DeclareMathOperator{\Wealth}{Wealth}
+\DeclareMathOperator{\Reward}{Reward}
+
+\newcommand{\N}{\mathbb{N}}     % natural numbers
+\newcommand{\R}{\mathbb{R}}     % real numbers
+\newcommand{\C}{\mathbb{C}}     % complex numbers
+\renewcommand{\H}{\mathcal{H}}  % Hilbert space
+\newcommand{\KL}[2]{D\left({#1}\middle\|{#2}\right)}  % KL divergence
+\newcommand{\norm}[1]{\left\|{#1}\right\|}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\indicator}{\mathbf{1}}
+
+\begin{acronym}
+\acro{EG}{Exponentiated Gradient}
+\acro{DFEG}{Dimension-Free Exponentiated Gradient}
+\acro{OMD}{Online Mirror Descent}
+\acro{ASGD}{Averaged Stochastic Gradient Descent}
+\acro{SGD}{Stochastic Gradient Descent}
+\acro{PiSTOL}{Parameter-free STOchastic Learning}
+\acro{OCO}{Online Convex Optimization}
+\acro{OLO}{Online Linear Optimization}
+\acro{RKHS}{Reproducing Kernel Hilbert Space}
+\acro{IID}{Independent and Identically Distributed}
+\acro{SVM}{Support Vector Machine}
+\acro{ERM}{Empirical Risk Minimization}
+\acro{COCOB}{Continous Coin Betting}
+\acro{MBA}{Master Betting Algorithm}
+\acro{KT}{Krichevsky-Trofimov}
+\acro{LEA}{Learning with Expert Advice}
+\end{acronym}
+
+\coltauthor{%
+   \Name{Francesco Orabona} \Email{francesco@orabona.com}\\
+   \Name{D\'avid P\'al} \Email{dpal@yahoo-inc.com}\\
+{\addr Yahoo Labs, New York}
+}
+
+\title{Parameter- and Scale-Free Online Algorithms}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+
+\end{abstract}
+
+\section{Introduction}
+
+Online linear optimization (OLO) is a sequential decision making problem where,
+in each round $t$, an algorithm chooses a point $w_t$ from a convex
+\emph{decision set} $K$ and then receives a loss vector $\ell_t$. Algorithm's
+goal is to keep its cumulative loss $\sum_{t=1}^T \langle \ell_t, w_t \rangle$
+small. We compare algorithms loss with a loss of hypothetical strategy that in
+every round chooses the same point $u$; the difference of algorithm's  loss and
+the loss of the hypothetical strategy is called regret. More formally,
+\emph{regret with respect to a competitor $u \in K$ after $T$ rounds} is
+$$
+\Regret_T(u) = \sum_{t=1}^T \langle \ell_t, w_t \rangle - \sum_{t=1}^T \langle \ell_t, u \rangle \; .
+$$
+
+Algorithms for various decision sets have been investigated. Practically and
+theoretically, the most important decision sets are the $N$-dimensional
+probability simplex $\Delta_N = \{ x \in \R^N ~:~ x \ge 0, \norm{x}_1 = 1\}$ and
+Hilbert spaces. OLO over $\Delta_N$ is referred to as the problem of Learning
+with Expert Advice (LEA); it used in machine learning as a way of combining $N$
+predictors. Premier application of OLO over a Hilbert space is learning of
+generalized linear models (e.g. logistic regression) in high dimension.
+Both LEA and OLO over Hilbert spaces have been extensively studied.
+
+\section{Learning with Expert Advice}
+
+Hedge algorithm~\cite{} for LEA satifies $\Regret_T(u) \le \sqrt{T \ln(N)}$ for
+any $u \in \Delta_N$. However, Hedge assumes that $T$ is known in advance and,
+more crucially, $\ell_t \in [0,1]^N$. AdaHedge algorithm~\cite{} lifts these
+assumptions. It satisfies $\Regret_T(u) \le \sqrt{\ln N \sum_{t=1}^T
+\norm{\ell_t}_\infty^2}$ for any sequence of loss vectors
+$\{\ell_t\}_{t=1}^\infty$, any $T \ge 0$ and any $u \in \Delta_N$. The great
+advantage of AdaHedge is that it does not place any assumption on loss vectors.
+AdaHedge is \emph{scale-free} which means that its predictions $w_t$
+are the same for $\{\ell_t\}_{t=1}^\infty$ and $\{c \ell_t\}_{t=1}^\infty$
+where $c$ is any positive constant.
+
+In another direction, \cite{Orabona-Pal-2016} propose an algorithm for LEA that
+satisfies $\Regret_T(u) \le \sqrt{3 T(4 + \ln N - H(u))}$ for any $u \in
+\Delta_N$. Here $H(u) = -\sum_{i=1}^N u_i \ln u_i$ is the Shannon entropy of
+$u$. This improves the regret bound of Hedge for competitors $u$ with high
+entropy; e.g. if $H(u) \ge \ln (\epsilon N)$ for some $\epsilon \in (0,1]$.
+Algorithms with similar guarantess are NormalHedge~\cite{} and Squint~\cite{}.
+
+Surprisingly, given $p \ge 0$, one can compute a learning rate $\eta > 0$ for
+Hedge algorithm such that for all $u$ such that $H(u) \ge p$, Hedge with
+learning rate $\eta$ satisfies $\Regret_T(u) \le \sqrt{T (\ln N - p + 1)}$. This
+is essentially the same bound as the bound of~\cite{Orabona-Pal-2016}. The
+problem of course is that Hedge needs as an input the threshold
+$p$.~\footnote{For $p = 0$, Hedge satisfies  $\Regret_T(u) \le \sqrt{T \ln N}$
+bound for all $u$}. The algorithms of~\cite{Orabona-Pal-2016, ???} can be viewed
+as \emph{parameter-free} versions of Hedge.
+
+Similar bound can be proved for AdaHedge. If $p > 0$, one can compute learning
+rate such that for all $u$ such that $H(u) \ge p$, AdaHedge algorithm satisfies
+$\Regret_T(u) \le \sqrt{(\ln N - p + 1) \sum_{t=1}^T \norm{\ell_t}_\infty^2}$. An
+algorithm that would achieve similar bound without the knowledge of $p$ is not
+known.
+
+Our first open problem is to design an algorithm such that for any
+sequence of loss vectors $\{\ell_t\}_{t=1}^\infty$, any $T \ge 0$
+and any $u \in \Delta_N$ satisfies
+$$
+\Regret_T(u) \le 100\sqrt{(1 + \ln N - H(u)) \sum_{t=1}^T \norm{\ell_t}_\infty^2} \; .
+$$
+
+\section{OLO over Hilbert Spaces}
+
+The situation with algorithms for OLO over Hilbert spaces is very similar to
+that of LEA. Let $H$ be a Hilbert space with inner product $\langle \cdot, \cdot \rangle$
+and induced norm $\norm{\cdot}$.
+
+It is a simple exercise to show that Follow The Regularized Leader algorithm with
+regularizer $\frac{1}{2}\norm{\cdot}^2$~\footnote{For constant learning rate, the
+algorithm is equivalent to gradient descent. However, gradient descent is
+``wrong'' algorithm for non-constant learning rates.} algorithm with learning
+rate $1/\sqrt{T}$ satisfies $\Regret_T(u) \le (1 + \norm{u}^2) \sqrt{T}$ for all
+$u \in \H$ assuming that $T$ is known and that $\norm{\ell_1}, \norm{\ell_2},
+\dots, \norm{\ell_T} \le 1$. Adaptive version of FTRL with the same regularizer
+but with learning rate $1/\sqrt{\sum_{i=1}^{t-1} \norm{\ell_i}^2}$ satisfies
+$\Regret_T(u) \le (1+\norm{u}^2) \sqrt{\sum_{t=1}^T \norm{\ell_t}^2}$
+for any $T \ge 0$ and any sequence of loss vectors $\{\ell_t\}_{t=1}^\infty$;
+see~\cite{Orabona-Pal-2015} and~\cite{adagrad}.
+
+In a different direction,
+
+\appendix
+
+\section{Follow The Regularized Leader}
+
+Follow The Regularized Leader with learning rate $\eta_t$ and regularizer $R:\H \to \R$
+chooses in round $t$,
+$$
+w_t = \argmin_{w \in \H} \left( R(w) + \frac{1}{\eta_t} \sum_{i=1}^{t-1} \langle \ell_i, w \rangle \right) \; .
+$$
+A well known result is that
+
+
+
+\end{document}
