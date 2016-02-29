@@ -6,14 +6,11 @@
 \usepackage{times}
 \usepackage{enumerate}
 
-\DeclareMathOperator*{\Exp}{\mathbf{E}}
 \DeclareMathOperator{\Regret}{Regret}
-\DeclareMathOperator{\Wealth}{Wealth}
 \DeclareMathOperator{\Reward}{Reward}
+\DeclareMathOperator{\polylog}{polylog}
 
-\newcommand{\N}{\mathbb{N}}     % natural numbers
 \newcommand{\R}{\mathbb{R}}     % real numbers
-\newcommand{\C}{\mathbb{C}}     % complex numbers
 \renewcommand{\H}{\mathcal{H}}  % Hilbert space
 \newcommand{\KL}[2]{D\left({#1}\middle\|{#2}\right)}  % KL divergence
 \newcommand{\norm}[1]{\left\|{#1}\right\|}
@@ -22,21 +19,9 @@
 \newcommand{\indicator}{\mathbf{1}}
 
 \begin{acronym}
-\acro{EG}{Exponentiated Gradient}
-\acro{DFEG}{Dimension-Free Exponentiated Gradient}
 \acro{OMD}{Online Mirror Descent}
-\acro{ASGD}{Averaged Stochastic Gradient Descent}
-\acro{SGD}{Stochastic Gradient Descent}
-\acro{PiSTOL}{Parameter-free STOchastic Learning}
 \acro{OCO}{Online Convex Optimization}
 \acro{OLO}{Online Linear Optimization}
-\acro{RKHS}{Reproducing Kernel Hilbert Space}
-\acro{IID}{Independent and Identically Distributed}
-\acro{SVM}{Support Vector Machine}
-\acro{ERM}{Empirical Risk Minimization}
-\acro{COCOB}{Continous Coin Betting}
-\acro{MBA}{Master Betting Algorithm}
-\acro{KT}{Krichevsky-Trofimov}
 \acro{LEA}{Learning with Expert Advice}
 \end{acronym}
 
@@ -53,18 +38,18 @@
 \maketitle
 
 \begin{abstract}
-Existing vanilla algorithms for online linear optimization over a set $K$ have
-$O((\lambda R(u) + 1/\lambda) \sqrt{T})$ regret with respect to  competitor $u$,
-where where $R(u)$ is a $1$-strongly convex regularizer and $\lambda > 0$ is a
-tuning parameter of the algorithm. For certain decision sets, new type of
-so-called \emph{parameter-free} algorithms have been developed. These have
-$\widetilde O(\sqrt{R(u) T})$ regret with respect to \emph{any} competitor $u$.
-Vanilla algorithm can achieve the same bound only for \emph{a fixed competitor
-$u$ known ahead of time} by setting $\lambda = 1/\sqrt{R(u)}$. A drawback of
+Existing vanilla algorithms for online linear optimization have
+$O((\lambda R(u) + 1/\lambda) \sqrt{T})$ regret with respect to competitor $u$,
+where $R(u)$ is a $1$-strongly convex regularizer and $\lambda > 0$ is a
+tuning parameter of the algorithm. For certain decision sets, the
+so-called \emph{parameter-free} algorithms have been developed, which have
+$\widetilde O(\sqrt{R(u) T})$ regret with respect to any competitor $u$.
+Vanilla algorithm can achieve the same bound only for a fixed competitor
+$u$ known ahead of time by setting $\lambda = 1/\sqrt{R(u)}$. A drawback of
 both vanilla and parameter-free algorithms is that they assume that loss vectors
 have norms bounded by $1$. There exist \emph{scale-free} algorithms that have
 $O((\lambda R(u) + 1/\lambda) \sqrt{T} \max_{1 \le t \le T} \norm{\ell_t})$
-regret with respect to any competitor $u$ and for \emph{any} sequence of loss
+regret with respect to any competitor $u$ and for any sequence of loss
 vector $\ell_1, \ell_2, \dots, \ell_T$. Parameter-free analogue of scale-free
 algorithms have never been designed. Is is possible to design algorithms that
 are both \emph{parameter-free} and \emph{scale-free} at the same time?
@@ -158,25 +143,26 @@ where $C > 0$ is a universal constant.
 The situation with algorithms for OLO over a Hilbert space $\H$ is very similar
 to that of LEA.
 
-It is a simple exercise to show that Follow The Regularized Leader algorithm
-with regularizer $\frac{1}{2}\norm{\cdot}^2$ and learning rate $1/\sqrt{T}$
-satisfies\footnote{For constant learning rate, the algorithm is equivalent to
-gradient descent. However, gradient descent is ``wrong'' algorithm for
-non-constant learning rates; see~\cite{Orabona-Pal-2016-scale-free}.}
-$\Regret_T(u) \le (1 + \norm{u}^2) \sqrt{T}$ for all $u \in \H$ assuming that
-$T$ is known and that $\norm{\ell_1}, \norm{\ell_2}, \dots, \norm{\ell_T} \le
-1$.
+It is a simple exercise to show that Follow The Regularized Leader (FTRL)
+algorithm with regularizer $\frac{1}{2}\norm{\cdot}^2$ and learning rate
+$1/\sqrt{T}$ satisfies\footnote{For constant learning rate, the algorithm is
+equivalent to gradient descent. However, gradient descent is ``wrong'' algorithm
+for non-constant learning rates; see~\cite{Orabona-Pal-2016-scale-free}.}
+$\Regret_T(u) \le \frac{1}{2}(1 + \norm{u}^2) \sqrt{T}$ for all $u \in \H$
+assuming that $T$ is known and that $\norm{\ell_1}, \norm{\ell_2}, \dots,
+\norm{\ell_T} \le 1$.
 
-Given $p > 0$, FTRL with $\frac{1}{2}\norm{\cdot}^2$ regularizer and learning
-rate $p/\sqrt{T}$ satisfies $\Regret_T(u) \le p \sqrt{T}$ for all $u$ such that
-$\norm{u} \le p$. Thus effectively replacing $1 + \norm{u}^2$ with $\norm{u}$.
+Given $\lambda > 0$, FTRL with $\frac{1}{2}\norm{\cdot}^2$ regularizer and
+learning rate $\lambda/\sqrt{T}$ satisfies $\Regret_T(u) \le \lambda \sqrt{T}$
+for all $u$ such that $\norm{u} \le \lambda$. Thus effectively replacing
+$\frac{1}{2}(1 + \norm{u}^2)$ with $\lambda \ge \norm{u}$.
 
-There have been tremendous amount of work
-\citep{Streeter-McMahan-2012,Orabona-2013,McMahan-Abernethy-2013,McMahan-Orabona-2014}
-on algorithms that satisfy $\Regret_T(u) \le \widetilde O\sqrt{\norm{u} T})$
-\textbf{for all $u \in \H$}. The $\widetilde O$ notation hides poly-logarithmic
-factors in $\norm{u}$ and $T$. These are called \emph{parameter-free}
-algorithms, since they do need to know $p$.
+There have been a lot of work \citep{Streeter-McMahan-2012, Orabona-2013,
+McMahan-Abernethy-2013, McMahan-Orabona-2014} on algorithms that satisfy
+$\Regret_T(u) \le \widetilde O(\sqrt{\norm{u} T})$ for all $u \in \H$.
+The $\widetilde O$ notation hides poly-logarithmic factors in $\norm{u}$ and
+$T$. These are called \emph{parameter-free} algorithms, since they do need to
+know $\lambda$.
 
 Adaptive version of FTRL with the same regularizer but with learning rate
 $1/\sqrt{\sum_{i=1}^{t-1} \norm{\ell_i}^2}$ satisfies $\Regret_T(u) \le
@@ -184,7 +170,14 @@ $1/\sqrt{\sum_{i=1}^{t-1} \norm{\ell_i}^2}$ satisfies $\Regret_T(u) \le
 sequence of loss vectors $\{\ell_t\}_{t=1}^\infty$; see~\cite{Orabona-Pal-2015}
 and~\cite{Duchi-Hazan-Singer-2011}.
 
-TODO
+Our second open problem is to design an algorithm that for any
+sequence of loss vectors $\{\ell_t\}_{t=1}^\infty$, any $T \ge 0$,
+and any $u \in \H$ satisfies
+$$
+\Regret_T(u) \le \polylog(1 + \norm{u}, T) \cdot (1 + \norm{u}) \sqrt{T} \max_{1 \le t \le T} \norm{\ell_t} \; ,
+$$
+where $\polylog(1 + \norm{u}, T)$ is a function that is bounded by a polynomial
+of $\log(1 + \norm{u})$ and $\log T$.
 
 \bibliography{biblio}
 
@@ -192,14 +185,35 @@ TODO
 
 \section{Follow The Regularized Leader for Hilbert Space}
 
-Follow The Regularized Leader with learning rate $\eta_t$ and regularizer $R:\H \to \R$
+Let $L_t = \sum_{i=1}^t \ell_i$.
+Follow The Regularized Leader with learning rate $\eta > 0$ and regularizer $\frac{1}{2}\norm{w}^2$
 chooses in round $t$,
 $$
-w_t = \argmin_{w \in \H} \left( R(w) + \frac{1}{\eta_t} \sum_{i=1}^{t-1} \langle \ell_i, w \rangle \right) \; .
+w_t
+= \argmin_{w \in \H} \left( \frac{1}{2}\norm{w}^2 + \eta \sum_{i=1}^{t-1} \langle \ell_i, w \rangle \right)
+= - \eta \sum_{i=1}^{t-1} \ell_i = - \eta L_{t-1} \; .
 $$
-A well known result is that
 
-TODO
+Since $\frac{1}{2}\norm{a-b}^2 \ge 0$ for any $a,b \in \H$, we have $\frac{1}{2}\norm{a}^2 \ge \langle a, b \rangle - \frac{1}{2}\norm{b}^2$.
+Plugging $a = -\sqrt{\eta} L_T$ and $b = u/\sqrt{\eta}$, we have
+$$
+\frac{1}{2\eta} \norm{u}^2 + \frac{\eta}{2} \sum_{t=1}^T \norm{L_t}^2 - \norm{L_{t-1}}^2
+= \frac{1}{2\eta} \norm{u}^2 + \frac{\eta}{2} \norm{L_T}^2  \ge - \langle L_T, u \rangle
+= - \sum_{t=1}^T \langle \ell_t, u \rangle  \; .
+$$
+Adding $\sum_{t=1}^T \langle \ell_t, w_t \rangle$ to both sides, we have
+$$
+\Regret_T(u) \le \frac{1}{2\eta} \norm{u}^2 + \frac{\eta}{2} \sum_{t=1}^T \norm{L_t}^2 - \norm{L_{t-1}}^2 + \sum_{t=1}^T \langle \ell_t, w_t \rangle \; .
+$$
+Substuting $w_t = -\eta L_{t-1}$ and $\norm{L_{t}}^2 = \norm{L_{t-1} + \ell_t}^2 = \norm{L_{t-1}}^2 + \norm{\ell_t}^2 + 2 \langle \ell_t, L_{t-1} \rangle$,
+we have
+$$
+\Regret_T(u) \le \frac{1}{2\eta} \norm{u}^2 + \frac{\eta}{2} \sum_{t=1}^T \norm{\ell_t}^2 \; .
+$$
+Assuming $\norm{\ell_t} \le 1$ and $\eta = \lambda/\sqrt{T}$, we have
+$$
+\Regret_T(u) \le \left(\frac{1}{2\lambda} \norm{u}^2 + \frac{\lambda}{2} \right) \sqrt{T} \; .
+$$
 
 
 \end{document}
