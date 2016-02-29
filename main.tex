@@ -152,7 +152,7 @@ $\Regret_T(u) \le \frac{1}{2}(1 + \norm{u}^2) \sqrt{T}$ for all $u \in \H$
 assuming that $T$ is known and that $\norm{\ell_1}, \norm{\ell_2}, \dots,
 \norm{\ell_T} \le 1$.
 
-Given $\lambda > 0$, FTRL with $\frac{1}{2}\norm{\cdot}^2$ regularizer and
+Given $\lambda > 0$, FTRL with the same regularizer and
 learning rate $\lambda/\sqrt{T}$ satisfies $\Regret_T(u) \le \lambda \sqrt{T}$
 for all $u$ such that $\norm{u} \le \lambda$. Thus effectively replacing
 $\frac{1}{2}(1 + \norm{u}^2)$ with $\lambda \ge \norm{u}$.
@@ -164,11 +164,15 @@ The $\widetilde O$ notation hides poly-logarithmic factors in $\norm{u}$ and
 $T$. These are called \emph{parameter-free} algorithms, since they do need to
 know $\lambda$.
 
-Adaptive version of FTRL with the same regularizer but with learning rate
-$1/\sqrt{\sum_{i=1}^{t-1} \norm{\ell_i}^2}$ satisfies $\Regret_T(u) \le
-(1+\norm{u}^2) \sqrt{\sum_{t=1}^T \norm{\ell_t}^2}$ for any $T \ge 0$ and any
-sequence of loss vectors $\{\ell_t\}_{t=1}^\infty$; see~\cite{Orabona-Pal-2015}
-and~\cite{Duchi-Hazan-Singer-2011}.
+\emph{Scale-free} version of FTRL with the same regularizer but with learning
+rate $1/\sqrt{\sum_{i=1}^{t-1} \norm{\ell_i}^2}$ satisfies $\Regret_T(u) \le
+(6.25 + \frac{1}{2}\norm{u}^2) \sqrt{T} \max_{1 \le t \le T} \norm{\ell_t}$ for
+any $T \ge 0$ and any sequence of loss vectors $\{\ell_t\}_{t=1}^\infty$;
+see~\cite{Orabona-Pal-2015} and~\cite{Duchi-Hazan-Singer-2011}. With learning
+rate $\lambda/\sqrt{\sum_{i=1}^{t-1} \norm{\ell_i}^2}$, the algorithm satisfies
+$\Regret_T(u) \le 3.6 \norm{u} \sqrt{T} \max_{1 \le t \le T} \norm{\ell_t}$ for
+all $u \in \H$ such that $\norm{u} \le \lambda$. However for that the knowledge
+of $\lambda$ is required.
 
 Our second open problem is to design an algorithm that for any
 sequence of loss vectors $\{\ell_t\}_{t=1}^\infty$, any $T \ge 0$,
