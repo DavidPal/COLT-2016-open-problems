@@ -104,7 +104,7 @@ bound for all $u$.}
 There have been tremendous amount of work \citep{Chaudhuri-Freund-Hsu-2009,
 Chernov-Vovk-2010, Koolen-van-Erven-2015, Luo-Schapire-2015} on algorithms that
 satisfy $\Regret_T(u) \le \widetilde O(\sqrt{T (\ln N - H(p))})$ \textbf{for all
-$u \in \Delta_N$}. Recently, \cite{Orabona-Pal-2016-parameter-free} proposed a
+$u \in \Delta_N$}. Also, recently \cite{Orabona-Pal-2016-parameter-free} proposed a
 simple algorithm that satisfies $\Regret_T(u) \le \sqrt{3 T(4 + \ln N -
 H(u))}$ for all $u \in \Delta_N$. Algorithms of this type are called
 \emph{parameter-free} algorithms, since in contrast to Hedge they do not need
@@ -154,14 +154,14 @@ assuming that $T$ is known and that $\norm{\ell_1}, \norm{\ell_2}, \dots,
 
 Given $\eta > 0$, FTRL with the same regularizer and
 learning rate $\eta/\sqrt{T}$ satisfies $\Regret_T(u) \le \eta \sqrt{T}$
-for all $u$ such that $\norm{u} \le \eta$. Thus effectively replacing
+for all $u$ such that $\norm{u} \le \eta$. Thus, effectively replacing
 $\frac{1}{2}(1 + \norm{u}^2)$ with $\eta \ge \norm{u}$.
 
 There have been a lot of work \citep{Streeter-McMahan-2012, Orabona-2013,
 McMahan-Abernethy-2013, McMahan-Orabona-2014} on algorithms that satisfy
 $\Regret_T(u) \le \widetilde O(\sqrt{\norm{u} T})$ for all $u \in \H$.
 The $\widetilde O$ notation hides poly-logarithmic factors in $\norm{u}$ and
-$T$. These are called \emph{parameter-free} algorithms, since they do need to
+$T$. These are called \emph{parameter-free} algorithms, since they do not need to
 know $\eta$.
 
 \emph{Scale-free} version of FTRL with the same regularizer but with learning
