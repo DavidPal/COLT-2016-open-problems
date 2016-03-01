@@ -28,7 +28,7 @@
 \coltauthor{%
    \Name{Francesco Orabona} \Email{francesco@orabona.com}\\
    \Name{D\'avid P\'al} \Email{dpal@yahoo-inc.com}\\
-{\addr Yahoo Labs, New York}
+{\addr Yahoo Research, New York}
 }
 
 \title{Open Problem: Parameter-Free and Scale-Free Online Algorithms}
@@ -39,16 +39,16 @@
 
 \begin{abstract}
 Existing vanilla algorithms for online linear optimization have
-$O((\lambda R(u) + 1/\lambda) \sqrt{T})$ regret with respect to competitor $u$,
-where $R(u)$ is a $1$-strongly convex regularizer and $\lambda > 0$ is a
+$O((\eta R(u) + 1/\eta) \sqrt{T})$ regret with respect to competitor $u$,
+where $R(u)$ is a $1$-strongly convex regularizer and $\eta > 0$ is a
 tuning parameter of the algorithm. For certain decision sets, the
 so-called \emph{parameter-free} algorithms have been developed, which have
 $\widetilde O(\sqrt{R(u) T})$ regret with respect to any competitor $u$.
 Vanilla algorithm can achieve the same bound only for a fixed competitor
-$u$ known ahead of time by setting $\lambda = 1/\sqrt{R(u)}$. A drawback of
+$u$ known ahead of time by setting $\eta = 1/\sqrt{R(u)}$. A drawback of
 both vanilla and parameter-free algorithms is that they assume that loss vectors
 have norms bounded by $1$. There exist \emph{scale-free} algorithms that have
-$O((\lambda R(u) + 1/\lambda) \sqrt{T} \max_{1 \le t \le T} \norm{\ell_t})$
+$O((\eta R(u) + 1/\eta) \sqrt{T} \max_{1 \le t \le T} \norm{\ell_t})$
 regret with respect to any competitor $u$ and for any sequence of loss
 vector $\ell_1, \ell_2, \dots, \ell_T$. Parameter-free analogue of scale-free
 algorithms have never been designed. Is is possible to design algorithms that
@@ -103,7 +103,7 @@ bound for all $u$.}
 
 There have been tremendous amount of work \citep{Chaudhuri-Freund-Hsu-2009,
 Chernov-Vovk-2010, Koolen-van-Erven-2015, Luo-Schapire-2015} on algorithms that
-satisfy $\Regret_T(u) \le \widetilde O\sqrt{T (\ln N - H(p))})$ \textbf{for all
+satisfy $\Regret_T(u) \le \widetilde O(\sqrt{T (\ln N - H(p))})$ \textbf{for all
 $u \in \Delta_N$}. Recently, \cite{Orabona-Pal-2016-parameter-free} proposed a
 simple algorithm that satisfies $\Regret_T(u) \le \sqrt{3 T(4 + \ln N -
 H(u))}$ for all $u \in \Delta_N$. Algorithms of this type are called
@@ -152,27 +152,27 @@ $\Regret_T(u) \le \frac{1}{2}(1 + \norm{u}^2) \sqrt{T}$ for all $u \in \H$
 assuming that $T$ is known and that $\norm{\ell_1}, \norm{\ell_2}, \dots,
 \norm{\ell_T} \le 1$.
 
-Given $\lambda > 0$, FTRL with the same regularizer and
-learning rate $\lambda/\sqrt{T}$ satisfies $\Regret_T(u) \le \lambda \sqrt{T}$
-for all $u$ such that $\norm{u} \le \lambda$. Thus effectively replacing
-$\frac{1}{2}(1 + \norm{u}^2)$ with $\lambda \ge \norm{u}$.
+Given $\eta > 0$, FTRL with the same regularizer and
+learning rate $\eta/\sqrt{T}$ satisfies $\Regret_T(u) \le \eta \sqrt{T}$
+for all $u$ such that $\norm{u} \le \eta$. Thus effectively replacing
+$\frac{1}{2}(1 + \norm{u}^2)$ with $\eta \ge \norm{u}$.
 
 There have been a lot of work \citep{Streeter-McMahan-2012, Orabona-2013,
 McMahan-Abernethy-2013, McMahan-Orabona-2014} on algorithms that satisfy
 $\Regret_T(u) \le \widetilde O(\sqrt{\norm{u} T})$ for all $u \in \H$.
 The $\widetilde O$ notation hides poly-logarithmic factors in $\norm{u}$ and
 $T$. These are called \emph{parameter-free} algorithms, since they do need to
-know $\lambda$.
+know $\eta$.
 
 \emph{Scale-free} version of FTRL with the same regularizer but with learning
 rate $1/\sqrt{\sum_{i=1}^{t-1} \norm{\ell_i}^2}$ satisfies $\Regret_T(u) \le
 (6.25 + \frac{1}{2}\norm{u}^2) \sqrt{T} \max_{1 \le t \le T} \norm{\ell_t}$ for
 any $T \ge 0$ and any sequence of loss vectors $\{\ell_t\}_{t=1}^\infty$;
 see~\cite{Orabona-Pal-2015} and~\cite{Duchi-Hazan-Singer-2011}. With learning
-rate $\lambda/\sqrt{\sum_{i=1}^{t-1} \norm{\ell_i}^2}$, the algorithm satisfies
+rate $\eta/\sqrt{\sum_{i=1}^{t-1} \norm{\ell_i}^2}$, the algorithm satisfies
 $\Regret_T(u) \le 3.6 \norm{u} \sqrt{T} \max_{1 \le t \le T} \norm{\ell_t}$ for
-all $u \in \H$ such that $\norm{u} \le \lambda$. However for that the knowledge
-of $\lambda$ is required.
+all $u \in \H$ such that $\norm{u} \le \eta$. However for that the knowledge
+of $\eta$ is required.
 
 Our second open problem is to design an algorithm that for any
 sequence of loss vectors $\{\ell_t\}_{t=1}^\infty$, any $T \ge 0$,
@@ -214,9 +214,9 @@ we have
 $$
 \Regret_T(u) \le \frac{1}{2\eta} \norm{u}^2 + \frac{\eta}{2} \sum_{t=1}^T \norm{\ell_t}^2 \; .
 $$
-Assuming $\norm{\ell_t} \le 1$ and $\eta = \lambda/\sqrt{T}$, we have
+Assuming $\norm{\ell_t} \le 1$ and $\eta = \eta/\sqrt{T}$, we have
 $$
-\Regret_T(u) \le \left(\frac{1}{2\lambda} \norm{u}^2 + \frac{\lambda}{2} \right) \sqrt{T} \; .
+\Regret_T(u) \le \left(\frac{1}{2\eta} \norm{u}^2 + \frac{\eta}{2} \right) \sqrt{T} \; .
 $$
 
 
