@@ -75,9 +75,7 @@ simplex, various combinatorial polytopes, Hilbert space, unit ball in Hilbert
 space. We focus on two particular sets,\footnote{We leave the generalization
 of the open problem to arbitrary decision sets as an exercise for the reader.} the
 $N$-dimensional probability simplex $\Delta_N = \{ x \in \R^N ~:~ x \ge 0,
-\norm{x}_1 = 1\}$ and the Hilbert space.\footnote{The particular type of
-Hilbert space does not play any role. To fix ideas, consider the space of
-infinite sequences of real numbers that are square-summable.} OLO over
+\norm{x}_1 = 1\}$ and the Hilbert space. OLO over
 $\Delta_N$ is referred to as the problem of Learning with Expert Advice (LEA);
 it used as a way of combining $N$ predictors and in boosting. OLO over Hilbert space is the workhorse for learning of generalized
 linear models in very high dimension.
@@ -98,11 +96,11 @@ The dual norm of $\norm{\cdot}_1$ is $\norm{\cdot}_\infty$.  The function $R(u) 
 $1$-strongly convex with respect to $\norm{\cdot}$.
 
 Follow The Regularized Leader (FTRL) algorithm with regularizer $R:K \to \R$
-and \emph{learning rate} $\eta > 0$ chooses in round $t$
-$$
-x_t = \argmin_{x \in K} \left( \frac{1}{\eta} R(x) + \sum_{s=1}^{t-1} \langle \ell_s, x \rangle \right) \; .
-$$
-The following is theorem is a slight modification of \citet[Theorem 2.11]{Shalev-Shwartz-2011}.
+and \emph{learning rate} $\eta > 0$ in round $t$ chooses 
+$
+x_t = \argmin_{x \in K} \left( \frac{1}{\eta} R(x) + \sum_{s=1}^{t-1} \langle \ell_s, x \rangle \right)
+$.
+The following theorem is a slight modification of \citet[Theorem 2.11]{Shalev-Shwartz-2011}.
 \begin{theorem}[Regret of FTRL]
 \label{theorem:ftrl-regret}
 If $R:K \to \R$ is $1$-strongly convex function with respect a norm $\norm{\cdot}$
@@ -171,7 +169,7 @@ of~\eqref{equation:parameter-free-bound-experts}
 \label{equation:parameter-free-bound-experts-2}
 \forall u \in \Delta_N \qquad \Regret_T(u) \le \widetilde O(\sqrt{T (1 + \ln N - H(u))}) = \widetilde O\left(\sqrt{T(1 + \KL{u}{\tfrac{1}{N}\indicator} )} \right) \; .
 \end{equation}
-Algorithms of this type are called \emph{parameter-free}, since in contrast to
+Algorithms of this type are called \emph{parameter-free} since, in contrast to
 Hedge, they do not need to know $p$.  The new algorithms are also called
 \emph{algorithms for unknown number of experts},
 and~\eqref{equation:parameter-free-bound-experts} is called a
@@ -181,7 +179,7 @@ we bound the regret with respect to the average of best $\epsilon N$ experts.
 That is, up to
 permutation of coordinates, we consider competitors $u$ of the form
 $$
-u = \left( \frac{1}{\epsilon N}, \dots, \frac{1}{\epsilon N}, 0, \dots, 0 \right) \; .
+u = \left( 1/(\epsilon N), \dots, 1/(\epsilon N), 0, \dots, 0 \right) \; .
 $$
 Such competitor satisfies $H(u) = \ln (\epsilon N)$ and the regret with respect to
 any such $u$ is $\widetilde O(\sqrt{T (1 + \ln(1/\epsilon)})$. In particular,
@@ -218,7 +216,7 @@ FTRL with regularizer
 $\frac{1}{2}\norm{u}^2$ and learning rate $\eta$ satisfies (cf. Theorem~\ref{theorem:ftrl-regret})
 \begin{equation}
 \label{equation:ftrl-vanila}
-\forall u \in \H \qquad \Regret_T(u) \le \frac{\norm{u}^2}{2\eta} + \frac{\eta T}{2}
+\forall u \in \H \qquad \Regret_T(u) \le \frac{\norm{u}^2}{2\eta} + \frac{\eta T}{2},
 \end{equation}
 assuming that $\norm{\ell_1}, \norm{\ell_2}, \dots, \norm{\ell_T} \le 1$.
 Bound~\eqref{equation:ftrl-vanila} is a direct analogue of
@@ -300,7 +298,7 @@ Here $\polylog(1 + \norm{u}, T)$ represents a function that is upper bounded by
 a polynomial in $\log(1+\norm{u})$ and $\log T$. It is probably a good idea
 to restrict the search to scale-free algorithms, since non-scale-free algorithms
 are unlikely to satisfy the bound. The problem is interesting
-even for one-dimensional Hilbert space $\H = \R$.
+even for one-dimensional Hilbert space $\H = \R$. Also, the reductions in \cite{Orabona-Pal-2016-parameter-free} might imply that solving the one-dimensional gives also the general Hilbert space and the LEA cases.
 
 \bibliography{biblio}
 
