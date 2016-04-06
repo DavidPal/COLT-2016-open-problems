@@ -44,15 +44,14 @@ Existing vanilla algorithms for online linear optimization have
 $O((\eta R(u) + 1/\eta) \sqrt{T})$ regret with respect to any competitor $u$,
 where $R(u)$ is a $1$-strongly convex regularizer and $\eta > 0$ is a
 tuning parameter of the algorithm. For certain decision sets and regularizers, the
-so-called \emph{parameter-free} algorithms have been developed, which have
-$\widetilde O(\sqrt{R(u) T})$ regret with respect to any competitor $u$.
+so-called \emph{parameter-free} algorithms have $\widetilde O(\sqrt{R(u) T})$ regret with respect to any competitor $u$.
 Vanilla algorithm can achieve the same bound only for a fixed competitor
 $u$ known ahead of time by setting $\eta = 1/\sqrt{R(u)}$. A drawback of
-both vanilla and parameter-free algorithms is that they assume that the loss vectors
-have norms bounded by a constant known to the algorithm. There exist \emph{scale-free} algorithms that have
+both vanilla and parameter-free algorithms is that they assume that the norm of the loss vectors
+is bounded by a constant known to the algorithm. There exist \emph{scale-free} algorithms that have
 $O((\eta R(u) + 1/\eta) \sqrt{T} \max_{1 \le t \le T} \norm{\ell_t})$
 regret with respect to any competitor $u$ and for any sequence of loss
-vector $\ell_1, \ell_2, \dots, \ell_T$. Parameter-free analogue of scale-free
+vector $\ell_1, \dots, \ell_T$. Parameter-free analogue of scale-free
 algorithms have never been designed. Is is possible to design algorithms that
 are simultaneously \emph{parameter-free} and \emph{scale-free}?
 \end{abstract}
@@ -85,7 +84,7 @@ linear models in very high dimension.
 
 We will use the following notation in the rest of this note. We denote by
 $\indicator$ the vector $(1,1,\dots,1) \in \R^N$. Shannon entropy $H(u) =
--\sum_{i=1}^N u_i \ln u_i$ is defined for any $u \in \Delta_N$.  Kullback-Leibler
+-\sum_{i=1}^N u_i \ln u_i$ is defined for any $u \in \Delta_N$.  The Kullback-Leibler
 divergence $\KL{u}{v} = \sum_{i=1}^N u_i \ln(u_i/v_i)$ is defined for any $u,v \in
 \Delta_N$. For any $p \in [1,\infty]$, $\norm{\cdot}_p$ denotes $p$-norm in
 $\R^N$.  We denote by $\norm{\cdot}_*$ the dual norm of a norm $\norm{\cdot}$.
@@ -129,10 +128,7 @@ Second, Hedge satisfies \eqref{equation:hedge-bound} only if $\ell_1, \ell_2,
 \dots, \ell_T \in [-1,1]^N$. We would like to allow loss vectors that are
 arbitrary vectors in $\R^N$.
 
-Hedge is identical to FTRL\footnote{Hedge is
-parametrized by $\beta \in (0,1)$ and FTRL is parametrized by $\eta \in (0,
-\infty)$.  There is one-to-one correspondence, $\eta = - \ln \beta$, between
-the two algorithms.} with regularizer $R(u) = -H(u)$.
+Hedge is identical to FTRL with regularizer $R(u) = -H(u)$.
 Theorem~\ref{theorem:ftrl-regret} implies that Hedge with learning rate $\eta$, satisfies
 \begin{equation}
 \label{equation:hedge-bound-2}
@@ -164,7 +160,7 @@ algorithm satisfying \eqref{equation:parameter-free-bound-experts}.
 Bounds of the form~\eqref{equation:parameter-free-bound-experts} were not
 considered until 2009. Since then, however, there have been a lot of work
 \citep{Chaudhuri-Freund-Hsu-2009, Chernov-Vovk-2010, Koolen-van-Erven-2015,
-Luo-Schapire-2015, Foster-Rakhlin-Sridharan-2015,
+LuoS14,Luo-Schapire-2015, Foster-Rakhlin-Sridharan-2015,
 Orabona-Pal-2016-parameter-free} on algorithms that satisfy slightly
 looser\footnote{Earlier papers have extra logarithmic factors. \citet{Foster-Rakhlin-Sridharan-2015,
 Orabona-Pal-2016-parameter-free}
@@ -179,11 +175,10 @@ Algorithms of this type are called \emph{parameter-free}, since in contrast to
 Hedge, they do not need to know $p$.  The new algorithms are also called
 \emph{algorithms for unknown number of experts},
 and~\eqref{equation:parameter-free-bound-experts} is called a
-\emph{quantile bound}. The reason for these names is that in order to bound
+\emph{quantile bound}. The reason for these names is that in order to bound the
 regret with respect to $(\epsilon N)$-th best expert for some $\epsilon \in (0,1)$,
-we bound regret with respect to the average of best $\epsilon N$ experts.
-This corresponds to the competitor $u$ that is uniform over the best $\epsilon
-N$ experts and has zero mass on the remaining experts.  In other words, up to
+we bound the regret with respect to the average of best $\epsilon N$ experts.
+That is, up to
 permutation of coordinates, we consider competitors $u$ of the form
 $$
 u = \left( \frac{1}{\epsilon N}, \dots, \frac{1}{\epsilon N}, 0, \dots, 0 \right) \; .
@@ -219,10 +214,7 @@ since non-scale-free algorithms are unlikely to satisfy the bound.
 The situation with algorithms for OLO over a Hilbert space $\H$ is very similar
 to that of LEA.
 
-FTRL~\footnote{FTRL with $\frac{1}{2}\norm{u}^2$ and constant learning rate is
-identical to Gradient Descent. However, for non-constant learning rates the two
-algorithms are different.  Moreover, \cite{Orabona-Pal-2016-scale-free} show
-that FTRL is superior to Gradient Descent in Hilbert spaces.} with regularizer
+FTRL with regularizer
 $\frac{1}{2}\norm{u}^2$ and learning rate $\eta$ satisfies (cf. Theorem~\ref{theorem:ftrl-regret})
 \begin{equation}
 \label{equation:ftrl-vanila}
@@ -280,12 +272,11 @@ McMahan-Orabona-2014} that satisfy a slightly weaker version of
 \end{equation}
 where $\polylog(1 + \norm{u}, T)$ represents a function that is upper bounded by
 a polynomial in $\log(1+\norm{u})$ and $\log T$.\footnote{It can be
-shown that for OLO over Hilbert space extra poly-logarithmic factor is necessary~\cite{McMahan-Abernethy-2013,Orabona-2013}.} 
+shown that for OLO over Hilbert space extra poly-logarithmic factor is necessary~\citep{McMahan-Abernethy-2013,Orabona-2013}.} 
 Algorithms satisfying \eqref{equation:olo-parameter-free-2}
 are called \emph{parameter-free}, since they do not need to know $D$.
 Moreover, the bound \eqref{equation:olo-parameter-free-2} has much better
-depedency on $\norm{u}$ than \eqref{equation:ftrl-vanila-2} for
-FTRL with regularizer $\frac{1}{2}\norm{u}^2$ (i.e. Gradient Descent).
+depedency on $\norm{u}$ than \eqref{equation:ftrl-vanila-2}.
 
 Analogue of AdaHedge for OLO over Hilbert space is FTRL with adaptive learning
 rate $\eta_t = 1/\sqrt{\sum_{i=1}^{t-1} \norm{\ell_i}^2}$.
