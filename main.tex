@@ -41,15 +41,15 @@
 
 \begin{abstract}
 Existing vanilla algorithms for online linear optimization have
-$O((\eta R(u) + 1/\eta) \sqrt{T})$ regret with respect to competitor $u$,
+$O((\eta R(u) + 1/\eta) \sqrt{T})$ regret with respect to any competitor $u$,
 where $R(u)$ is a $1$-strongly convex regularizer and $\eta > 0$ is a
-tuning parameter of the algorithm. For certain decision sets, the
+tuning parameter of the algorithm. For certain decision sets and regularizers, the
 so-called \emph{parameter-free} algorithms have been developed, which have
 $\widetilde O(\sqrt{R(u) T})$ regret with respect to any competitor $u$.
 Vanilla algorithm can achieve the same bound only for a fixed competitor
 $u$ known ahead of time by setting $\eta = 1/\sqrt{R(u)}$. A drawback of
-both vanilla and parameter-free algorithms is that they assume that loss vectors
-have norms bounded by $1$. There exist \emph{scale-free} algorithms that have
+both vanilla and parameter-free algorithms is that they assume that the loss vectors
+have norms bounded by a constant known to the algorithm. There exist \emph{scale-free} algorithms that have
 $O((\eta R(u) + 1/\eta) \sqrt{T} \max_{1 \le t \le T} \norm{\ell_t})$
 regret with respect to any competitor $u$ and for any sequence of loss
 vector $\ell_1, \ell_2, \dots, \ell_T$. Parameter-free analogue of scale-free
@@ -59,7 +59,7 @@ are simultaneously \emph{parameter-free} and \emph{scale-free}?
 
 \section{Introduction}
 
-Online linear optimization (OLO) is a sequential decision making problem where,
+Online linear optimization (OLO)~\citep{Cesa-Bianchi-Lugosi-2006, Shalev-Shwartz-2011} is a sequential decision making problem where,
 in each round $t$, an algorithm chooses a point $x_t$ from a convex
 \emph{decision set} $K$ and then receives a loss vector $\ell_t$. Algorithm's
 goal is to keep its cumulative loss $\sum_{t=1}^T \langle \ell_t, x_t \rangle$
@@ -70,21 +70,18 @@ with respect to a competitor $u \in K$ after $T$ rounds} is
 $$
 \Regret_T(u) = \sum_{t=1}^T \langle \ell_t, x_t \rangle - \sum_{t=1}^T \langle \ell_t, u \rangle \; .
 $$
-For more details see~\cite{Cesa-Bianchi-Lugosi-2006, Shalev-Shwartz-2011}.
 
-Algorithms for various decision sets have been investigated (the probability
+Algorithms for various decision sets have been investigated, e.g., the probability
 simplex, various combinatorial polytopes, Hilbert space, unit ball in Hilbert
-space). We focus on two particular sets,\footnote{We leave the generalization
+space. We focus on two particular sets,\footnote{We leave the generalization
 of the open problem to arbitrary decision sets as an exercise for the reader.} the
 $N$-dimensional probability simplex $\Delta_N = \{ x \in \R^N ~:~ x \ge 0,
 \norm{x}_1 = 1\}$ and the Hilbert space.\footnote{The particular type of
 Hilbert space does not play any role. To fix ideas, consider the space of
 infinite sequences of real numbers that are square-summable.} OLO over
 $\Delta_N$ is referred to as the problem of Learning with Expert Advice (LEA);
-it used in machine learning as a way of combining $N$ predictors and in
-boosting. OLO over Hilbert space is the workhorse for learning of generalized
-linear models (e.g. logistic regression, online SVM, linear least squares) in
-very high dimension.
+it used as a way of combining $N$ predictors and in boosting. OLO over Hilbert space is the workhorse for learning of generalized
+linear models in very high dimension.
 
 We will use the following notation in the rest of this note. We denote by
 $\indicator$ the vector $(1,1,\dots,1) \in \R^N$. Shannon entropy $H(u) =
@@ -97,12 +94,12 @@ its inner product, and by $\norm{\cdot}$ the induced norm.
 
 We will use the following well know facts.  Negative Shannon entropy, $-H(u)$,
 defined on $\Delta_N$ is $1$-strongly convex with respect to $\norm{\cdot}_1$.
-The dual norm of $\norm{\cdot}_1$ is $\norm{\cdot}_\infty$.  Function $R(u) =
+The dual norm of $\norm{\cdot}_1$ is $\norm{\cdot}_\infty$.  The function $R(u) =
 \frac{1}{2}\norm{u}^2$ defined on Hilbert space with norm $\norm{\cdot}$ is
 $1$-strongly convex with respect to $\norm{\cdot}$.
 
 Follow The Regularized Leader (FTRL) algorithm with regularizer $R:K \to \R$
-and \emph{learning rate} $\eta > 0$ chooses in round $t$,
+and \emph{learning rate} $\eta > 0$ chooses in round $t$
 $$
 x_t = \argmin_{x \in K} \left( \frac{1}{\eta} R(x) + \sum_{s=1}^{t-1} \langle \ell_s, x \rangle \right) \; .
 $$
@@ -113,7 +110,7 @@ If $R:K \to \R$ is $1$-strongly convex function with respect a norm $\norm{\cdot
 then for any sequence $\{\ell_t\}_{t=1}^\infty$ such that $\|\ell_t\|_* \le 1$,
 FTRL with learning rate $\eta$ satisfies
 $$
-\forall T \ge 0 \quad \forall u \in K \qquad \Regret_T(u) \le \frac{R(u) - \inf_{v \in K} R(v)}{\eta} + \eta T \; .
+\forall T \ge 0 \quad \forall u \in K \qquad \Regret_T(u) \le \frac{R(u) - \inf_{v \in K} R(v)}{\eta} + \frac{\eta T}{2} \; .
 $$
 \end{theorem}
 
@@ -127,7 +124,7 @@ Hedge algorithm~\citep{Freund-Schapire-1997} for LEA satisfies
 This bound is known to be optimal in the worst-case sense~\cite[Section
 3.7]{Cesa-Bianchi-Lugosi-2006}. However, \eqref{equation:hedge-bound} has two
 drawbacks.  First, the right-hand side of \eqref{equation:hedge-bound} is
-independent of $u$.  In other words, the algorithm does not adapt to $u$.
+independent of $u$, that is, the algorithm does not adapt to $u$.
 Second, Hedge satisfies \eqref{equation:hedge-bound} only if $\ell_1, \ell_2,
 \dots, \ell_T \in [-1,1]^N$. We would like to allow loss vectors that are
 arbitrary vectors in $\R^N$.
@@ -139,7 +136,7 @@ the two algorithms.} with regularizer $R(u) = -H(u)$.
 Theorem~\ref{theorem:ftrl-regret} implies that Hedge with learning rate $\eta$, satisfies
 \begin{equation}
 \label{equation:hedge-bound-2}
-\Regret_T(u) \le \frac{\ln N - H(u)}{\eta} + \eta T = \frac{\KL{u}{\frac{1}{N}\indicator}}{\eta} + \eta T \; .
+\Regret_T(u) \le \frac{\ln N - H(u)}{\eta} + \frac{\eta T}{2} = \frac{\KL{u}{\frac{1}{N}\indicator}}{\eta} + \frac{\eta T}{2} \; .
 \end{equation}
 Let $p \in [0, \ln N)$. If we choose $\eta = \sqrt{\frac{\ln(N) - p}{T}}$, we get that
 \begin{equation}
@@ -168,8 +165,9 @@ Bounds of the form~\eqref{equation:parameter-free-bound-experts} were not
 considered until 2009. Since then, however, there have been a lot of work
 \citep{Chaudhuri-Freund-Hsu-2009, Chernov-Vovk-2010, Koolen-van-Erven-2015,
 Luo-Schapire-2015, Foster-Rakhlin-Sridharan-2015,
-Orabona-Pal-2016-parameter-free} on algorithms that satisfy a slightly
-looser\footnote{Earlier papers have extra logarithmic factors. Last two papers
+Orabona-Pal-2016-parameter-free} on algorithms that satisfy slightly
+looser\footnote{Earlier papers have extra logarithmic factors. \citet{Foster-Rakhlin-Sridharan-2015,
+Orabona-Pal-2016-parameter-free}
 have only the extra $1+$ and fixed multiplicative constant hidden on
 $\widetilde O(\cdot)$} versions
 of~\eqref{equation:parameter-free-bound-experts}
@@ -180,17 +178,17 @@ of~\eqref{equation:parameter-free-bound-experts}
 Algorithms of this type are called \emph{parameter-free}, since in contrast to
 Hedge, they do not need to know $p$.  The new algorithms are also called
 \emph{algorithms for unknown number of experts},
-and~\eqref{equation:parameter-free-bound-experts} is called called a
+and~\eqref{equation:parameter-free-bound-experts} is called a
 \emph{quantile bound}. The reason for these names is that in order to bound
 regret with respect to $(\epsilon N)$-th best expert for some $\epsilon \in (0,1)$,
 we bound regret with respect to the average of best $\epsilon N$ experts.
 This corresponds to the competitor $u$ that is uniform over the best $\epsilon
 N$ experts and has zero mass on the remaining experts.  In other words, up to
-permutation of coordinates, we consider competitor $u$ of the form
+permutation of coordinates, we consider competitors $u$ of the form
 $$
 u = \left( \frac{1}{\epsilon N}, \dots, \frac{1}{\epsilon N}, 0, \dots, 0 \right) \; .
 $$
-Such competitor satisfies $H(u) = \ln (\epsilon N)$ and regret with respect to
+Such competitor satisfies $H(u) = \ln (\epsilon N)$ and the regret with respect to
 any such $u$ is $\widetilde O(\sqrt{T (1 + \ln(1/\epsilon)})$. In particular,
 the last bound does not depend on the number of experts $N$, only on the
 quantile $\epsilon$.  These algorithms remove the first drawback of Hedge.
@@ -224,11 +222,11 @@ to that of LEA.
 FTRL~\footnote{FTRL with $\frac{1}{2}\norm{u}^2$ and constant learning rate is
 identical to Gradient Descent. However, for non-constant learning rates the two
 algorithms are different.  Moreover, \cite{Orabona-Pal-2016-scale-free} show
-that FTRL is superior to Gradient Descent for Hilbert space.} with regularizer
+that FTRL is superior to Gradient Descent in Hilbert spaces.} with regularizer
 $\frac{1}{2}\norm{u}^2$ and learning rate $\eta$ satisfies (cf. Theorem~\ref{theorem:ftrl-regret})
 \begin{equation}
 \label{equation:ftrl-vanila}
-\forall u \in \H \qquad \Regret_T(u) \le \frac{\norm{u}^2}{2\eta} + \eta T
+\forall u \in \H \qquad \Regret_T(u) \le \frac{\norm{u}^2}{2\eta} + \frac{\eta T}{2}
 \end{equation}
 assuming that $\norm{\ell_1}, \norm{\ell_2}, \dots, \norm{\ell_T} \le 1$.
 Bound~\eqref{equation:ftrl-vanila} is a direct analogue of
@@ -237,31 +235,28 @@ Bound~\eqref{equation:ftrl-vanila} is a direct analogue of
 A simple choice $\eta = 1/\sqrt{T}$ leads to an algorithm that satisfies
 \begin{equation}
 \label{equation:ftrl-vanila-2}
-\Regret_T(u) \le \left(1+\frac{\norm{u}^2}{2}\right)\sqrt{T} \; .
+\Regret_T(u) \le \frac{1}{2}\left(1+\norm{u}^2\right)\sqrt{T} \; .
 \end{equation}
-This is perhaps the simplest and oldest online learning algorithm. Despite its
-ubiquity, the algorithm and the bound \eqref{equation:ftrl-vanila-2} has two
+Despite its ubiquity, the algorithm and the bound \eqref{equation:ftrl-vanila-2} have two
 drawbacks. First, the depedency on $\norm{u}$ is suboptimal. As we will see
 shortly, the quadratic depedency can be replaced by an (almost) linear
-depedency.  Second, the bound holds only for sequences of loss vectors such
-that $\norm{\ell_1}, \norm{\ell_2}, \dots, \norm{\ell_T} \le 1$. A robust
+depedency.  Second, the bound holds only for sequences of loss vectors with $\norm{\ell_t} \le 1, 1\leq t\leq T$. A robust
 algorithm should be able to handle any sequence of loss vectors in $\H$.
 
 Starting from \eqref{equation:ftrl-vanila}, if we choose learning rate $\eta =
 D/\sqrt{T}$, we get a family of algorithms parametrized by $D \in [0,\infty)$
-that satisfy
+that satisfy an analogue bound of \eqref{equation:hedge-bound-3}:
 \begin{equation}
 \label{equation:ftrl-vanila-3}
-\forall u \in \H \qquad \norm{u} \le D \quad  \Longrightarrow \quad \Regret_T(u) \le D \sqrt{2T} \; .
+\forall u \in \H \qquad \norm{u} \le D \quad  \Longrightarrow \quad \Regret_T(u) \le D \sqrt{T} \; .
 \end{equation}
-Bound~\eqref{equation:ftrl-vanila-3} can be viewed as analogue of \eqref{equation:hedge-bound-3}.
 
 Instead of family of algorithms parametrized by $D \in [0,\infty)$ satisfying
 bound \eqref{equation:ftrl-vanila-3}, one \emph{would like
 to have} a single algorithm (without any tuning parameters) satisfying
 \begin{equation}
 \label{equation:olo-parameter-free}
-\forall u \in \H \qquad \Regret_T(u) \le \norm{u} \sqrt{2T} \; .
+\forall u \in \H \qquad \Regret_T(u) \le \norm{u} \sqrt{T} \; .
 \end{equation}
 Bound \eqref{equation:olo-parameter-free} is an analogue of
 \eqref{equation:parameter-free-bound-experts} for LEA. Similar to LEA,
@@ -285,7 +280,7 @@ McMahan-Orabona-2014} that satisfy a slightly weaker version of
 \end{equation}
 where $\polylog(1 + \norm{u}, T)$ represents a function that is upper bounded by
 a polynomial in $\log(1+\norm{u})$ and $\log T$.\footnote{It can be
-shown that for OLO over Hilbert space extra poly-logarithmic factor is necessary.} 
+shown that for OLO over Hilbert space extra poly-logarithmic factor is necessary~\cite{McMahan-Abernethy-2013,Orabona-2013}.} 
 Algorithms satisfying \eqref{equation:olo-parameter-free-2}
 are called \emph{parameter-free}, since they do not need to know $D$.
 Moreover, the bound \eqref{equation:olo-parameter-free-2} has much better
