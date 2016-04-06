@@ -6,6 +6,8 @@
 \usepackage{times}
 \usepackage{enumerate}
 
+% \newtheorem{theorem}{Theorem}
+
 \DeclareMathOperator{\Regret}{Regret}
 \DeclareMathOperator{\Reward}{Reward}
 \DeclareMathOperator{\polylog}{polylog}
@@ -52,7 +54,7 @@ $O((\eta R(u) + 1/\eta) \sqrt{T} \max_{1 \le t \le T} \norm{\ell_t})$
 regret with respect to any competitor $u$ and for any sequence of loss
 vector $\ell_1, \ell_2, \dots, \ell_T$. Parameter-free analogue of scale-free
 algorithms have never been designed. Is is possible to design algorithms that
-are both \emph{parameter-free} and \emph{scale-free} at the same time?
+are simultaneously \emph{parameter-free} and \emph{scale-free}?
 \end{abstract}
 
 \section{Introduction}
@@ -72,77 +74,117 @@ For more details see~\cite{Cesa-Bianchi-Lugosi-2006, Shalev-Shwartz-2011}.
 
 Algorithms for various decision sets have been investigated (the probability
 simplex, various combinatorial polytopes, Hilbert space, unit ball in Hilbert
-space). We focus on two particular sets, the $N$-dimensional probability
-simplex $\Delta_N = \{ x \in \R^N ~:~ x \ge 0, \norm{x}_1 = 1\}$ and the
-Hilbert space.\footnote{The particular type of Hilbert space does not play any
-role. To fix ideas, consider the space of infinite sequences of real numbers
-that are square-summable.} OLO over $\Delta_N$ is referred to as the problem of
-Learning with Expert Advice (LEA); it used in machine learning as a way of
-combining $N$ predictors and in boosting. OLO over Hilbert space is the
-workhorse for learning of generalized linear models (e.g. logistic
-regression, online SVM, linear least squares) in very high dimension.
+space). We focus on two particular sets,\footnote{We leave the generalization
+of the open problem to arbitrary decision sets as an exercise for the reader.} the
+$N$-dimensional probability simplex $\Delta_N = \{ x \in \R^N ~:~ x \ge 0,
+\norm{x}_1 = 1\}$ and the Hilbert space.\footnote{The particular type of
+Hilbert space does not play any role. To fix ideas, consider the space of
+infinite sequences of real numbers that are square-summable.} OLO over
+$\Delta_N$ is referred to as the problem of Learning with Expert Advice (LEA);
+it used in machine learning as a way of combining $N$ predictors and in
+boosting. OLO over Hilbert space is the workhorse for learning of generalized
+linear models (e.g. logistic regression, online SVM, linear least squares) in
+very high dimension.
 
-We will use the following notation in the rest of this note. Shannon entropy
-is $H(u) = -\sum_{i=1}^N u_i \ln u_i$ defined for any $u \in \Delta_N$. For any
-$p \in [1,\infty]$, $\norm{\cdot}_p$ denotes $p$-norm in $\R^N$. If $\H$ is a
-real Hilbert space, we denote by $\langle \cdot, \cdot \rangle$ its inner
-product, and by $\norm{\cdot}$ the induced norm.
+We will use the following notation in the rest of this note. We denote by
+$\indicator$ the vector $(1,1,\dots,1) \in \R^N$. Shannon entropy $H(u) =
+-\sum_{i=1}^N u_i \ln u_i$ is defined for any $u \in \Delta_N$.  Kullback-Leibler
+divergence $\KL{u}{v} = \sum_{i=1}^N u_i \ln(u_i/v_i)$ is defined for any $u,v \in
+\Delta_N$. For any $p \in [1,\infty]$, $\norm{\cdot}_p$ denotes $p$-norm in
+$\R^N$.  We denote by $\norm{\cdot}_*$ the dual norm of a norm $\norm{\cdot}$.
+If $\H$ is a real Hilbert space, we denote by $\langle \cdot, \cdot \rangle$
+its inner product, and by $\norm{\cdot}$ the induced norm.
+
+We will use the following well know facts.  Negative Shannon entropy, $-H(p)$,
+defined on $\Delta_N$ is $1$-strongly convex with respect to $\norm{\cdot}_1$.
+The dual norm of $\norm{\cdot}_1$ is $\norm{\cdot}_\infty$.  Function $R(u) =
+\frac{1}{2}\norm{u}^2$ defined on Hilbert space with norm $\norm{\cdot}$ is
+$1$-strongly convex with respect to $\norm{\cdot}$.
+
+Follow The Regularized Leader (FTRL) algorithm with regularizer $R:K \to \R$
+and \emph{learning rate} $\eta > 0$ chooses in round $t$,
+$$
+x_t = \argmin_{x \in K} \left( \frac{1}{\eta} R(x) + \sum_{s=1}^{t-1} \langle \ell_s, x \rangle \right) \; .
+$$
+The following is theorem is a slight modification of \citet[Theorem 2.11]{Shalev-Shwartz-2011}.
+\begin{theorem}[Regret of FTRL]
+\label{theorem:ftrl-regret}
+If $R:K \to \R$ is $1$-strongly convex function with respect a norm $\norm{\cdot}$
+then for any sequence $\{\ell_t\}_{t=1}^\infty$ such that $\|\ell_t\|_* \le 1$,
+FTRL with learning rate $\eta$ satisfies
+$$
+\forall T \ge 0 \quad \forall u \in K \qquad \Regret_T(u) \le \frac{R(u) - \inf_{v \in K} R(v)}{\eta} + \eta T \; .
+$$
+\end{theorem}
 
 \section{Learning with Expert Advice}
 
 Hedge algorithm~\citep{Freund-Schapire-1997} for LEA satisfies
 \begin{equation}
 \label{equation:hedge-bound}
-\forall u \in \Delta_N \qquad \Regret_T(u) \le \sqrt{T \ln(N)}
+\forall u \in \Delta_N \qquad \Regret_T(u) \le 2\sqrt{T \ln N}
 \end{equation}
 This bound is known to be optimal in the worst-case sense~\cite[Section
 3.7]{Cesa-Bianchi-Lugosi-2006}. However, \eqref{equation:hedge-bound} has two
-drawbacks.  First, the bound is independent of $u$. In other words, it does not
-adapt to $u$.  Second, Hedge and the bound assume that $\ell_1, \ell_2, \dots,
-\ell_T \in [0,1]^N$; we would like to allow loss vectors that are arbitary
-vectors in $\R^N$.
+drawbacks.  First, the right-hand side of \eqref{equation:hedge-bound} is
+independent of $u$.  In other words, the algorithm does not adapt to $u$.
+Second, Hedge and the bound assume that $\ell_1, \ell_2, \dots, \ell_T \in
+[-1,1]^N$. We would like to allow loss vectors that are arbitrary vectors in
+$\R^N$.
 
-Hedge is equivalent to Exponential Weights Algorithm (EWA).\footnote{Hedge is parametrized by $\beta \in (0,1)$ and EWA is parametrized by $\eta \in (0, \infty)$.
-There is one-to-one correspondence, $\eta = - \ln \beta$, between the two algorithms.}
-It can be shown that EWA with learning rate $\eta$, satisfies
+Hedge is equivalent to FTRL\footnote{Hedge is
+parametrized by $\beta \in (0,1)$ and FTRL is parametrized by $\eta \in (0,
+\infty)$.  There is one-to-one correspondence, $\eta = - \ln \beta$, between
+the two algorithms.} with regularizer $R(u) = -H(u)$.
+Theorem~\ref{theorem:ftrl-regret} implies that Hedge with learning rate $\eta$, satisfies
 \begin{equation}
 \label{equation:hedge-bound-2}
-\Regret_T(u) \le \frac{\ln N - H(u)}{\eta} + \eta T \; .
+\Regret_T(u) \le \frac{\ln N - H(u)}{\eta} + \eta T = \frac{\KL{u}{\frac{1}{N}\indicator}}{\eta} + \eta T \; .
 \end{equation}
 Let $p \in [0, \ln N]$. If we choose $\eta = \sqrt{\frac{\ln(N) - p}{T}}$, we get that
 \begin{equation}
 \label{equation:hedge-bound-3}
-\forall u \in \Delta_N, \qquad H(u) \ge p \quad \Longrightarrow \quad \Regret_T(u) \le \sqrt{T (\ln N - p)} \; .
+\forall u \in \Delta_N, \qquad H(u) \ge p \quad \Longrightarrow \quad \Regret_T(u) \le 2\sqrt{T (\ln N - p)} \; .
 \end{equation}
 The bound \eqref{equation:hedge-bound} corresponds to choice $p=0$ and
 $\eta=\sqrt{\frac{\ln N}{T}}$.
 
-Instead of the family of bounds~\eqref{equation:hedge-bound-3} parametrized by
-$p \in [0, \ln N]$ for a family of algorithms parametrized by $p$,
-ideally, one would like to have a single algorithm (without any
-tuning parameters) satisfying
+Instead of the family of algorithms parametrized by $p \in [0,\ln N]$ that
+satisfy bound~\eqref{equation:hedge-bound-3}, one \emph{would like to have} a single
+algorithm (without any tuning parameters) satisfying
 \begin{equation}
 \label{equation:parameter-free-bound-experts}
-\forall u \in \Delta_N \qquad \Regret_T(u) \le \sqrt{T (\ln N - H(u))} \; .
+\forall u \in \Delta_N \qquad \Regret_T(u) \le 2\sqrt{T (\ln N - H(u))} = 2\sqrt{T \cdot \KL{u}{\tfrac{1}{N} \indicator}} \; .
 \end{equation}
+Note that \eqref{equation:parameter-free-bound-experts} is stronger than
+\eqref{equation:hedge-bound-3} in following the sense: A single algorithm
+satisfying~\eqref{equation:parameter-free-bound-experts} satisfies
+\eqref{equation:hedge-bound-3} for all $p$ simultaneously. However, a family
+of algorithms $\{A_p ~:~ p \in [0,\ln N]\}$ parametrized by $p$ where $A_p$
+satisfies \eqref{equation:hedge-bound-3}, does not yield a single
+algorithm satisfying \eqref{equation:parameter-free-bound-experts}.
 
-Bounds of the form~\eqref{equation:parameter-free-bound-experts} were not considered
-until 2009. Since then, there have been a lot of work \citep{Chaudhuri-Freund-Hsu-2009,
-Chernov-Vovk-2010, Koolen-van-Erven-2015, Luo-Schapire-2015, Foster-Rakhlin-Sridharan-2015,
-Orabona-Pal-2016-parameter-free} on algorithms that
-satisfy
+Bounds of the form~\eqref{equation:parameter-free-bound-experts} were not
+considered until 2009. Since then, however, there have been a lot of work
+\citep{Chaudhuri-Freund-Hsu-2009, Chernov-Vovk-2010, Koolen-van-Erven-2015,
+Luo-Schapire-2015, Foster-Rakhlin-Sridharan-2015,
+Orabona-Pal-2016-parameter-free} on algorithms that satisfy a
+slightly looser\footnote{Earlier papers have extra logarithmic factors. Last two papers have only the extra $1+$ and fixed multiplicative constant hidden on $\widetilde O(\cdot)$}
+versions of~\eqref{equation:parameter-free-bound-experts}
 \begin{equation}
 \label{equation:parameter-free-bound-experts-2}
-\forall u \in \Delta_N \qquad \Regret_T(u) \le \widetilde O(\sqrt{T (1 + \ln N - H(u))}) \; .
+\forall u \in \Delta_N \qquad \Regret_T(u) \le \widetilde O(\sqrt{T (1 + \ln N - H(u))}) = \widetilde O\left(\sqrt{T(1 + \KL{u}{\tfrac{1}{N}\indicator} )} \right) \; .
 \end{equation}
 Algorithms of this type are called \emph{parameter-free}, since in contrast to
-Hedge/EWA, they do not need to know $p$.
-They are sometime called algorithms for \emph{unknown number of
-experts}, and~\eqref{equation:parameter-free-bound-experts-2} is called
-called a \emph{quantile bound}. The reason for the latter name is that in order
-to compete with $(\epsilon N)$-th best expert, on can choose competitor $u$ that
-is uniform over the top $\epsilon N$ experts and has zero mass on the remaining experts.
-In other words, up to permuation of coordinates, we consider competitor $u$ of the form
+Hedge, they do not need to know $p$.  The new algorithms are also called
+\emph{algorithms for unknown number of experts},
+and~\eqref{equation:parameter-free-bound-experts} is called called a
+\emph{quantile bound}. The reason for these names is that in order to bound
+regret with respect to $(\epsilon N)$-th best expert for some $\epsilon \in (0,1)$,
+we bound regret with respect to the average of best $\epsilon N$ experts.
+This corresponds to the competitor $u$ that is uniform over the best $\epsilon
+N$ experts and has zero mass on the remaining experts.  In other words, up to
+permutation of coordinates, we consider competitor $u$ of the form
 $$
 u = \left( \frac{1}{\epsilon N}, \dots, \frac{1}{\epsilon N}, 0, \dots, 0 \right) \; .
 $$
@@ -151,7 +193,7 @@ any such $u$ is $\widetilde O(\sqrt{T (1 + \ln(1/\epsilon)})$. In particular,
 the last bound does not depend on the number of experts $N$, only on the
 quantile $\epsilon$.  These algorithms remove the first drawback of Hedge.
 
-The second drawback of Hedge is be removed by the AdaHedge algorithm of
+The second drawback of Hedge is removed by the AdaHedge algorithm due to
 \cite{de-Rooij-van-Erven-Grunwald-Koolen-2014}; see
 also~\citep{Orabona-Pal-2016-parameter-free}. AdaHedge lifts the assumptions
 $\ell_t \in [0,1]^N$. Namely, for any sequence of loss vectors
@@ -161,117 +203,93 @@ $\{\ell_t\}_{t=1}^\infty$, $\ell_t \in \R^N$, any $T \ge 0$ and any $u \in
 predictions $x_t$ are the same for $\{\ell_t\}_{t=1}^\infty$ and $\{c
 \ell_t\}_{t=1}^\infty$ where $c$ is any positive constant.
 
-Our first open problem is to design an algorithm that combines the advatanges
-of parameter-free and scale-free algorithms. More formally: \emph{Does there exist a universal constant $C > 0$
-and, for each $N \ge 2$, is there an algorithm (without any tuning parameters) such that for any sequence of
-loss vectors $\{\ell_t\}_{t=1}^\infty$, $\ell_t \in \R^N$,
+Our first open problem is to design an algorithm that combines the advantages
+of parameter-free and scale-free algorithms. More formally: \emph{Does there
+exist a universal constant $C > 0$ and, for each $N \ge 2$, is there an
+algorithm (without any tuning parameters) such that for any sequence of loss
+vectors $\{\ell_t\}_{t=1}^\infty$, $\ell_t \in \R^N$,}
 $$
 \forall T \ge 0 \quad \forall u \in \Delta_N \qquad \Regret_T(u) \le C \sqrt{(1 + \ln N - H(u)) \sum_{t=1}^T \norm{\ell_t}_\infty^2} \ \ ?
 $$
-}
+It is probably a good idea to restrict the search to scale-free algorithms,
+since non-scale-free algorithms are unlikely to satisfy the bound.
 
 \section{OLO over Hilbert Spaces}
 
 The situation with algorithms for OLO over a Hilbert space $\H$ is very similar
 to that of LEA.
 
-The canonical algorithm is Follow The Regularized Leader (FTRL) algorithm\footnote{For constant learning rate, the algorithm is
-equivalent to gradient descent. However, gradient descent is the ``wrong'' algorithm
-for non-constant learning rates; see~\cite{Orabona-Pal-2016-scale-free}.}
-with regularizer $\frac{1}{2}\|x\|^2$. The algorithm is parametrized by learning rate $\eta_t > 0$
-that in round $t$ chooses
-$$
-x_t = \argmin_{x \in \H} \left( \frac{1}{2\eta_t}\|x\|^2 + \sum_{s=1}^{t-1} \langle \ell_t, x \rangle \right) \; .
-$$
-FTRL with constant learning rate $\eta_t = \eta$ satisfies
+FTRL with regularizer $\frac{1}{2}\norm{u}^2$ and learning rate $\eta$ satisfies
 \begin{equation}
 \label{equation:ftrl-vanila}
-\forall u \in \H \qquad \Regret_T(u) \le \frac{1}{2} \left( \lambda + \frac{\norm{u}^2}{\lambda} \right) \sqrt{T} \; .
+\forall u \in \H \qquad \Regret_T(u) \le \frac{\norm{u}^2}{2\eta} + \eta T \; .
 \end{equation}
 assuming that $\norm{\ell_1}, \norm{\ell_2}, \dots, \norm{\ell_T} \le 1$.
-Bound~\eqref{equation:ftrl-vanila} can be viewed as analogue of \eqref{equation:hedge-bound-2}.
+Bound~\eqref{equation:ftrl-vanila} is a direct analogue of
+\eqref{equation:hedge-bound-2} for LEA.
 
-We rewrite~\eqref{equation:ftrl-vanila} slighlty differently. For any $D \ge
-0$, FTRL with learning rate $\eta_t = D/\sqrt{T}$, satisfies
+A simple choice $\eta = 1/\sqrt{T}$ leads to an algorithm that satisfies
+\begin{equation}
+\label{equation:ftrl-vanila-2}
+\Regret_T(u) \le \left(1+\frac{\norm{u}^2}{2}\right)\sqrt{T} \; .
+\end{equation}
+With a learning rate $\eta = D/\sqrt{T}$, we get a family of algorithms
+parametrized by $D \in [0,\infty)$ that satisfy
 \begin{equation}
 \label{equation:ftrl-vanila-3}
-\forall u \in \H \qquad \|u\| \le D \quad  \Longrightarrow \quad \Regret_T(u) \le D \sqrt{T} \; .
+\forall u \in \H \qquad \norm{u} \le D \quad  \Longrightarrow \quad \Regret_T(u) \le D \sqrt{2T} \; .
 \end{equation}
 Bound~\eqref{equation:ftrl-vanila-3} can be viewed as analogue of \eqref{equation:hedge-bound-3}.
 
-a
-More generally, for $\eta_t = \lambda/\sqrt{T}$, the algorithm satisfies
-$$
-\forall u \in \H \qquad \Regret_T(u) \le \frac{1}{2}(1 + \norm{u}^2) \sqrt{T} \; .
-$$
-From this we can derive that,  with $\eta_t = \lambda/\sqrt{T}$,
- the algorithm
+Instead of family of algorithms parametrized by $D \in [0,\infty)$ satisfying
+bound \eqref{equation:ftrl-vanila-3}, one \emph{would like
+to have} a single algorithm (without any tuning parameters) satisfying
+\begin{equation}
+\label{equation:olo-parameter-free}
+\forall u \in \H \qquad \Regret_T(u) \le \norm{u} \sqrt{2T} \; .
+\end{equation}
+Bound \eqref{equation:olo-parameter-free} is an analogue of
+\eqref{equation:parameter-free-bound-experts} for LEA. Similar to LEA,
+\eqref{equation:olo-parameter-free} is stronger than
+\eqref{equation:ftrl-vanila-3}, since \eqref{equation:olo-parameter-free} holds
+for a single algorithm, whereas \eqref{equation:ftrl-vanila-3} holds for a
+family of algorithms parametrized by $D$. Finally, note that
+\eqref{equation:olo-parameter-free} has better dependency on $\norm{u}$
+than \eqref{equation:ftrl-vanila-2}.
 
-Given $\eta > 0$, FTRL with the same regularizer and
-learning rate $\eta/\sqrt{T}$ satisfies $\Regret_T(u) \le \eta \sqrt{T}$
-for all $u$ such that $\norm{u} \le \eta$. Thus, effectively replacing
-$\frac{1}{2}(1 + \norm{u}^2)$ with $\eta \ge \norm{u}$.
+Similar to LEA, there have been a lot of work on algorithms
+\citep{Streeter-McMahan-2012, Orabona-2013, McMahan-Abernethy-2013,
+McMahan-Orabona-2014} that satisfy a slightly weaker version of \eqref{equation:olo-parameter-free}
+\begin{equation}
+\label{equation:olo-parameter-free-2}
+\forall u \in \H \qquad \Regret_T(u) \le \widetilde O(\sqrt{\norm{u} T}) \; .
+\end{equation}
+The $\widetilde O$ notation hides poly-logarithmic factors\footnote{It can be
+shown that for OLO over Hilbert space extra poly-logarithmic factor is necessary.} in
+$\norm{u}$ and $T$.  Algorithms satisfying \eqref{equation:olo-parameter-free-2}
+are called \emph{parameter-free}, since they do not need to know $D$.
 
-There have been a lot of work \citep{Streeter-McMahan-2012, Orabona-2013,
-McMahan-Abernethy-2013, McMahan-Orabona-2014} on algorithms that satisfy
-$\Regret_T(u) \le \widetilde O(\sqrt{\norm{u} T})$ for all $u \in \H$.
-The $\widetilde O$ notation hides poly-logarithmic factors in $\norm{u}$ and
-$T$. These are called \emph{parameter-free} algorithms, since they do not need to
-know $\eta$.
-
-\emph{Scale-free} version of FTRL with the same regularizer but with learning
-rate $1/\sqrt{\sum_{i=1}^{t-1} \norm{\ell_i}^2}$ satisfies $\Regret_T(u) \le
-(6.25 + \frac{1}{2}\norm{u}^2) \sqrt{T} \max_{1 \le t \le T} \norm{\ell_t}$ for
-any $T \ge 0$ and any sequence of loss vectors $\{\ell_t\}_{t=1}^\infty$~\citep{Orabona-Pal-2015}. With learning
-rate $\eta/\sqrt{\sum_{i=1}^{t-1} \norm{\ell_i}^2}$, the algorithm satisfies
-$\Regret_T(u) \le 3.6 \norm{u} \sqrt{T} \max_{1 \le t \le T} \norm{\ell_t}$ for
-all $u \in \H$ such that $\norm{u} \le \eta$. However for that the knowledge
-of $\eta$ is required.
-
-Our second open problem is to design an algorithm that for any
-sequence of loss vectors $\{\ell_t\}_{t=1}^\infty$, any $T \ge 0$,
-and any $u \in \H$ satisfies
+Analogue of AdaHedge for OLO over Hilbert space is FTRL with adaptive learning
+rate $\eta_t = 1/\sqrt{\sum_{i=1}^{t-1} \norm{\ell_i}^2}$.
+\cite{Orabona-Pal-2015} showed that the resulting algorithm is scale-free and
+for any sequence of loss vectors $\{\ell_t\}_{t=1}^\infty$, $\ell_t \in \H$, it satisfies
 $$
-\Regret_T(u) \le \polylog(1 + \norm{u}, T) \cdot (1 + \norm{u}) \sqrt{T} \max_{1 \le t \le T} \norm{\ell_t} \; ,
+\forall T \ge 0 \quad \forall u \in \H \qquad \Regret_T(u) \le \left(6.25 + \frac{1}{2}\norm{u}^2 \right) \sqrt{T} \max_{1 \le t \le T} \norm{\ell_t} \; .
 $$
-where $\polylog(1 + \norm{u}, T)$ is a function that is bounded by a polynomial
-of $\log(1 + \norm{u})$ and $\log T$.
+
+Our second open problem is to design an algorithm that combines the advantages
+of parameter-free and scale-free algorithms for OLO over $\H$. Formally:
+\emph{Is there an algorithm (without any tuning parameters) such that for any sequence of loss
+vectors $\{\ell_t\}_{t=1}^\infty$, $\ell_t \in \H$,}
+$$
+\forall T \ge 0 \quad \forall u \in \H \qquad
+\Regret_T(u) \le \polylog(1 + \norm{u}, T) \cdot (1 + \norm{u}) \sqrt{T} \max_{1 \le t \le T} \norm{\ell_t} \ \ ?
+$$
+Here $\polylog(1 + \norm{u}, T)$ represents a function that is upper bounded by
+a polynomial in $\log(1+\norm{u})$ and $\log T$. It is probably a good idea
+to restrict the search to scale-free algorithms, since non-scale-free algorithms
+are unlikely to satisfy the bound.
 
 \bibliography{biblio}
-
-\appendix
-
-\section{Follow The Regularized Leader for Hilbert Space}
-
-Let $L_t = \sum_{i=1}^t \ell_i$.
-Follow The Regularized Leader with learning rate $\eta' > 0$ and regularizer $\frac{1}{2}\norm{w}^2$
-chooses in round $t$,
-$$
-w_t
-= \argmin_{w \in \H} \left( \frac{1}{2}\norm{w}^2 + \eta' \sum_{i=1}^{t-1} \langle \ell_i, w \rangle \right)
-= - \eta' \sum_{i=1}^{t-1} \ell_i = - \eta' L_{t-1} \; .
-$$
-
-Since $\frac{1}{2}\norm{a-b}^2 \ge 0$ for any $a,b \in \H$, we have $\frac{1}{2}\norm{a}^2 \ge \langle a, b \rangle - \frac{1}{2}\norm{b}^2$.
-Plugging $a = -\sqrt{\eta'} L_T$ and $b = u/\sqrt{\eta'}$, we have
-$$
-\frac{1}{2\eta'} \norm{u}^2 + \frac{\eta'}{2} \sum_{t=1}^T \norm{L_t}^2 - \norm{L_{t-1}}^2
-= \frac{1}{2\eta'} \norm{u}^2 + \frac{\eta'}{2} \norm{L_T}^2  \ge - \langle L_T, u \rangle
-= - \sum_{t=1}^T \langle \ell_t, u \rangle  \; .
-$$
-Adding $\sum_{t=1}^T \langle \ell_t, w_t \rangle$ to both sides, we have
-$$
-\Regret_T(u) \le \frac{1}{2\eta'} \norm{u}^2 + \frac{\eta'}{2} \sum_{t=1}^T \norm{L_t}^2 - \norm{L_{t-1}}^2 + \sum_{t=1}^T \langle \ell_t, w_t \rangle \; .
-$$
-Substuting $w_t = -\eta' L_{t-1}$ and $\norm{L_{t}}^2 = \norm{L_{t-1} + \ell_t}^2 = \norm{L_{t-1}}^2 + \norm{\ell_t}^2 + 2 \langle \ell_t, L_{t-1} \rangle$,
-we have
-$$
-\Regret_T(u) \le \frac{1}{2\eta'} \norm{u}^2 + \frac{\eta'}{2} \sum_{t=1}^T \norm{\ell_t}^2 \; .
-$$
-Assuming $\norm{\ell_t} \le 1$ and $\eta' = \eta/\sqrt{T}$, we have
-$$
-\Regret_T(u) \le \left(\frac{1}{2\eta} \norm{u}^2 + \frac{\eta}{2} \right) \sqrt{T} \; .
-$$
-
 
 \end{document}

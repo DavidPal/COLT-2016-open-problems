@@ -6,4 +6,7 @@
 *.out
 *.toc
 
+# Vim temporary files
+*.swp
+
 main.pdf
