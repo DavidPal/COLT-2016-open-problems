@@ -47,25 +47,25 @@ been designed. Is is possible to design algorithms that are simultaneously
 
 \section{Introduction}
 
-Online linear optimization (OLO)~\citep{Cesa-Bianchi-Lugosi-2006,
-Shalev-Shwartz-2011} is a sequential decision making problem where, in each
-round $t$, an algorithm chooses a point $x_t$ from a convex \emph{decision set}
+We consider the standard Online Linear Optimization (OLO)~\citep{Cesa-Bianchi-Lugosi-2006,
+Shalev-Shwartz-2011} setting. In each round $t$, an algorithm chooses a point $x_t$ from a convex \emph{decision set}
 $K$ and then receives a loss vector $\ell_t$. Algorithm's goal is to keep its
-cumulative loss $\sum_{t=1}^T \langle \ell_t, x_t \rangle$ small. Algorithm can
-be evaluated by comparing its loss with the loss of hypothetical strategy that
-in every round chooses the same point $u$; the difference of two losses is
-called \emph{regret}. More formally, \emph{regret with respect to a competitor
-$u \in K$ after $T$ rounds} is
+\emph{regret} small, defined as the difference between its cumulative loss and the cumulative loss of hypothetical strategy that
+in every round chooses the same point $u \in K$, that is
 $$
 \Regret_T(u) = \sum_{t=1}^T \langle \ell_t, x_t \rangle - \sum_{t=1}^T \langle \ell_t, u \rangle \; .
 $$
 
-Algorithms for various decision sets have been investigated, e.g., the
-probability simplex, various combinatorial polytopes, Hilbert space, unit ball
-in Hilbert space. We focus on two particular sets,\footnote{We leave the
-generalization of the open problem to arbitrary decision sets as an exercise
-for the reader.} the $N$-dimensional probability simplex $\Delta_N = \{ x \in
-\R^N ~:~ x \ge 0, \norm{x}_1 = 1\}$ and the Hilbert space. OLO over $\Delta_N$
+%Algorithms for various decision sets have been investigated, e.g., the
+%probability simplex, various combinatorial polytopes, Hilbert space, unit ball
+%in Hilbert space.
+We focus on two particular sets,
+%\footnote{We leave the
+%generalization of the open problem to arbitrary decision sets as an exercise
+%for the reader.}
+the $N$-dimensional probability simplex $\Delta_N = \{ x \in
+\R^N ~:~ x \ge 0, \norm{x}_1 = 1\}$ 
+and the Hilbert space. OLO over $\Delta_N$
 is referred to as the problem of Learning with Expert Advice (LEA); it used as
 a way of combining $N$ predictors and in boosting. OLO over Hilbert space is
 the workhorse for learning of generalized linear models in very high dimension.
@@ -80,7 +80,7 @@ dual norm of a norm $\norm{\cdot}$.  If $\H$ is a real Hilbert space, we denote
 by $\langle \cdot, \cdot \rangle$ its inner product, and by $\norm{\cdot}$ the
 induced norm.
 
-We will use the following well know facts.  Negative Shannon entropy, $-H(u)$,
+We will use the following well know facts. The negative Shannon entropy, $-H(u)$,
 defined on $\Delta_N$ is $1$-strongly convex with respect to $\norm{\cdot}_1$.
 The dual norm of $\norm{\cdot}_1$ is $\norm{\cdot}_\infty$.  The function $R(u)
 = \frac{1}{2}\norm{u}^2$ defined on Hilbert space with norm $\norm{\cdot}$ is
@@ -160,10 +160,10 @@ O(\cdot)$} versions of~\eqref{equation:parameter-free-bound-experts}
 \forall u \in \Delta_N \qquad \Regret_T(u) \le \widetilde O(\sqrt{T (1 + \ln N - H(u))}) = \widetilde O\left(\sqrt{T \left(1 + \KL{u}{\tfrac{1}{N}\indicator} \right)} \right) \; .
 \end{equation}
 Algorithms of this type are called \emph{parameter-free} since, in contrast to
-Hedge, they do not need to know $p$.  The new algorithms are also called
-\emph{algorithms for unknown number of experts},
-and~\eqref{equation:parameter-free-bound-experts} is called a \emph{quantile
-bound}. The reason for these names is that one can bound the regret with
+Hedge, they do not need to know $p$. % The new algorithms are also called
+%\emph{algorithms for unknown number of experts},
+The regret in \eqref{equation:parameter-free-bound-experts} is called a \emph{quantile
+bound} because one can bound the regret with
 respect to $(\epsilon N)$-th best expert for any $\epsilon \in (0,1)$. Indeed,
 regret with respect to $(\epsilon N)$-th best expert is upper bounded by the
 regret with respect to the average of the top $\epsilon N$ experts, which can
@@ -197,21 +197,20 @@ vectors $\{\ell_t\}_{t=1}^\infty$, $\ell_t \in \R^N$,}
 $$
 \forall T \ge 0 \quad \forall u \in \Delta_N \qquad \Regret_T(u) \le C \sqrt{(1 + \ln N - H(u)) \sum_{t=1}^T \norm{\ell_t}_\infty^2} \ \ ?
 $$
-It is a good idea to restrict the search to scale-free algorithms, since
-non-scale-free algorithms are unlikely to satisfy the bound.
+%It is a good idea to restrict the search to scale-free algorithms, since
+%non-scale-free algorithms are unlikely to satisfy the bound.
 
 Attempts to solve the open problem include all sorts of doubling tricks.
 For example, algorithm could keep an upper bound $B_t$ on $\max_{1 \i \le t}
 \norm{\ell_i}_\infty$, for example, of the form $B_t = \norm{\ell_1} 2^k$
 doubling whenever larger $\norm{\ell_t}_\infty$ is observed. However, resulting
-regret bounds depend on $\log_2 \left( \frac{\max_{1 \le t \le T}
+regret bounds might depend on $\log_2 \left( \frac{\max_{1 \le t \le T}
 \norm{\ell_t}_\infty}{\norm{\ell_1}_\infty} \right)$ which can be $\Omega(T)$
 in the worst-case.
 
 A more promising approach is to use infinitely many copies of AdaHedge with
 learning rates $2^{-i}$, $i=1,2,\dots$, and combine their predictions using
-master AdaHedge with a certain non-uniform prior distribution; cf.
-\cite{Foster-Rakhlin-Sridharan-2015}. It is however not clear how to run this
+a master AdaHedge with a certain non-uniform prior distribution. However, it is not clear how to run this
 algorithm in $O(N)$ time.
 
 \section{OLO over Hilbert Spaces}
@@ -309,18 +308,17 @@ $$
 Here $\polylog(1 + \norm{u}, T)$ represents a function that is upper bounded by
 a polynomial in $\log(1+\norm{u})$ and $\log T$.
 
-It is a good idea to restrict the search to scale-free algorithms, since
-non-scale-free algorithms are unlikely to satisfy the bound. The problem is
+%It is a good idea to restrict the search to scale-free algorithms, since
+%non-scale-free algorithms are unlikely to satisfy the bound.
+The problem is
 interesting even for one-dimensional Hilbert space $\H = \R$. Also, the
 reductions in \cite{Orabona-Pal-2016-parameter-free} suggest that solving the
 one-dimensional problem solves the general Hilbert space and the LEA cases.
 
-Similar to LEA, attemps to solve the open problem included doubling trick on
+Similar to LEA, attempts to solve the open problem included doubling trick on
 the maximum norm $\norm{\ell_t}$ seen so far. This approach fails the same way
-as for LEA. A more promising approach is to use infinitely many copies of FTRL
-indexed by $i=1,2,\dots$, with scale-free learning rates
-$C_i/\sqrt{\sum_{j=1}^{t-1} \norm{\ell_j}^2}$ for suitable constants $C_i$ and
-combine their predictions using AdaHedge with a non-uniform prior.
+as for LEA. Differently from the LEA case, running infinitely many copies of FTRL
+and combine their predictions using AdaHedge with a non-uniform prior is problematic because the predictions of the copies are not bounded.
 
 \bibliography{biblio}
 
