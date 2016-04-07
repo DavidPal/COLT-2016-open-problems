@@ -191,13 +191,14 @@ predictions $x_t$ are the same for $\{\ell_t\}_{t=1}^\infty$ and $\{c
 Our first open problem is to design an algorithm that combines the advantages
 of parameter-free and scale-free algorithms. More formally: \emph{Does there
 exist a universal constant $C > 0$ and, for each $N \ge 2$, is there an
-algorithm (without any tuning parameters) such that for any sequence of loss
+algorithm (without any tuning parameters) that runs in $O(N)$ time per round
+and satisfies, for any sequence of loss
 vectors $\{\ell_t\}_{t=1}^\infty$, $\ell_t \in \R^N$,}
 $$
 \forall T \ge 0 \quad \forall u \in \Delta_N \qquad \Regret_T(u) \le C \sqrt{(1 + \ln N - H(u)) \sum_{t=1}^T \norm{\ell_t}_\infty^2} \ \ ?
 $$
-It is probably a good idea to restrict the search to scale-free algorithms,
-since non-scale-free algorithms are unlikely to satisfy the bound.
+It is a good idea to restrict the search to scale-free algorithms, since
+non-scale-free algorithms are unlikely to satisfy the bound.
 
 Attempts to solve the open problem include all sorts of doubling tricks.
 For example, algorithm could keep an upper bound $B_t$ on $\max_{1 \i \le t}
@@ -210,7 +211,8 @@ in the worst-case.
 A more promising approach is to use infinitely many copies of AdaHedge with
 learning rates $2^{-i}$, $i=1,2,\dots$, and combine their predictions using
 master AdaHedge with a certain non-uniform prior distribution; cf.
-\cite{Foster-Rakhlin-Sridharan-2015, Koolen-van-Erven-Grunwald-2014}.
+\cite{Foster-Rakhlin-Sridharan-2015}. It is however not clear how to run this
+algorithm in $O(N)$ time.
 
 \section{OLO over Hilbert Spaces}
 
@@ -296,26 +298,29 @@ We stress that the algorithm does \emph{not} need to know $\max_{1 \le t \le T}
 
 Our second open problem is to design an algorithm that combines the advantages
 of parameter-free and scale-free algorithms for OLO over a Hilbert space $\H$.
-Formally: \emph{Is there an algorithm (without any tuning parameters) such that
-for any sequence of loss vectors $\{\ell_t\}_{t=1}^\infty$, $\ell_t \in \H$,}
+Formally: \emph{Construct an algorithm (without any tuning parameters) that
+makes $O(1)$ vector additions in $\H$ and $O(1)$ other operations, and
+satisfies for any sequence of loss vectors $\{\ell_t\}_{t=1}^\infty$, $\ell_t
+\in \H$,}
 $$
 \forall T \ge 0 \quad \forall u \in \H \qquad
-\Regret_T(u) \le \polylog(1 + \norm{u}, T) \cdot (1 + \norm{u}) \sqrt{T} \max_{1 \le t \le T} \norm{\ell_t} \ \ ?
+\Regret_T(u) \le \polylog(1 + \norm{u}, T) \cdot (1 + \norm{u}) \sqrt{T} \max_{1 \le t \le T} \norm{\ell_t} \; .
 $$
 Here $\polylog(1 + \norm{u}, T)$ represents a function that is upper bounded by
-a polynomial in $\log(1+\norm{u})$ and $\log T$. It is probably a good idea to
-restrict the search to scale-free algorithms, since non-scale-free algorithms
-are unlikely to satisfy the bound. The problem is interesting even for
-one-dimensional Hilbert space $\H = \R$. Also, the reductions in
-\cite{Orabona-Pal-2016-parameter-free} suggest that solving the
+a polynomial in $\log(1+\norm{u})$ and $\log T$.
+
+It is a good idea to restrict the search to scale-free algorithms, since
+non-scale-free algorithms are unlikely to satisfy the bound. The problem is
+interesting even for one-dimensional Hilbert space $\H = \R$. Also, the
+reductions in \cite{Orabona-Pal-2016-parameter-free} suggest that solving the
 one-dimensional problem solves the general Hilbert space and the LEA cases.
 
 Similar to LEA, attemps to solve the open problem included doubling trick on
-the maximum norm $\norm{\ell_t}$ seen so far. This approach fails the way as
-for LEA. A more promising approach is to use infinitely many copies of FTRL
+the maximum norm $\norm{\ell_t}$ seen so far. This approach fails the same way
+as for LEA. A more promising approach is to use infinitely many copies of FTRL
 indexed by $i=1,2,\dots$, with scale-free learning rates
 $C_i/\sqrt{\sum_{j=1}^{t-1} \norm{\ell_j}^2}$ for suitable constants $C_i$ and
-combine their predictions using AdaHedge with non-uniform prior.
+combine their predictions using AdaHedge with a non-uniform prior.
 
 \bibliography{biblio}
 
