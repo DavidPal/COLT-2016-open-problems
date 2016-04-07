@@ -149,7 +149,7 @@ algorithm satisfying \eqref{equation:parameter-free-bound-experts}.
 Bounds of the form~\eqref{equation:parameter-free-bound-experts} were not
 considered until 2009. Since then, however, there have been a lot of work
 \citep{Chaudhuri-Freund-Hsu-2009, Chernov-Vovk-2010, Koolen-van-Erven-2015,
-LuoS14,Luo-Schapire-2015, Foster-Rakhlin-Sridharan-2015,
+Luo-Schapire-2014, Luo-Schapire-2015, Foster-Rakhlin-Sridharan-2015,
 Orabona-Pal-2016-parameter-free} on algorithms that satisfy slightly
 looser\footnote{Earlier papers have extra logarithmic factors.
 \citet{Foster-Rakhlin-Sridharan-2015, Orabona-Pal-2016-parameter-free} have
@@ -157,17 +157,18 @@ only the extra $1+$ and fixed multiplicative constant hidden on $\widetilde
 O(\cdot)$} versions of~\eqref{equation:parameter-free-bound-experts}
 \begin{equation}
 \label{equation:parameter-free-bound-experts-2}
-\forall u \in \Delta_N \qquad \Regret_T(u) \le \widetilde O(\sqrt{T (1 + \ln N - H(u))}) = \widetilde O\left(\sqrt{T(1 + \KL{u}{\tfrac{1}{N}\indicator} )} \right) \; .
+\forall u \in \Delta_N \qquad \Regret_T(u) \le \widetilde O(\sqrt{T (1 + \ln N - H(u))}) = \widetilde O\left(\sqrt{T \left(1 + \KL{u}{\tfrac{1}{N}\indicator} \right)} \right) \; .
 \end{equation}
 Algorithms of this type are called \emph{parameter-free} since, in contrast to
 Hedge, they do not need to know $p$.  The new algorithms are also called
 \emph{algorithms for unknown number of experts},
 and~\eqref{equation:parameter-free-bound-experts} is called a \emph{quantile
-bound}. The reason for these names is that in order to bound the regret with
-respect to $(\epsilon N)$-th best expert for some $\epsilon \in (0,1)$, we
-bound the regret with respect to the average of the best $\epsilon N$ experts.
-That is, up to permutation of coordinates, we consider competitors $u$ of the
-form
+bound}. The reason for these names is that one can bound the regret with
+respect to $(\epsilon N)$-th best expert for any $\epsilon \in (0,1)$. Indeed,
+regret with respect to $(\epsilon N)$-th best expert is upper bounded by the
+regret with respect to the average of the top $\epsilon N$ experts, which can
+be expressed as the regret with respect to a competitor $u$ that, up to
+permutation of coordinates, has the form
 $$
 u = \left( 1/(\epsilon N), \dots, 1/(\epsilon N), 0, \dots, 0 \right) \; .
 $$
@@ -198,6 +199,19 @@ $$
 It is probably a good idea to restrict the search to scale-free algorithms,
 since non-scale-free algorithms are unlikely to satisfy the bound.
 
+Attempts to solve the open problem include all sorts of doubling tricks.
+For example, algorithm could keep an upper bound $B_t$ on $\max_{1 \i \le t}
+\norm{\ell_i}_\infty$, for example, of the form $B_t = \norm{\ell_1} 2^k$
+doubling whenever larger $\norm{\ell_t}_\infty$ is observed. However, resulting
+regret bounds depend on $\log_2 \left( \frac{\max_{1 \le t \le T}
+\norm{\ell_t}_\infty}{\norm{\ell_1}_\infty} \right)$ which can be $\Omega(T)$
+in the worst-case.
+
+A more promising approach is to use infinitely many copies of AdaHedge with
+learning rates $2^{-i}$, $i=1,2,\dots$, and combine their predictions using
+master AdaHedge with a certain non-uniform prior distribution; cf.
+\cite{Foster-Rakhlin-Sridharan-2015, Koolen-van-Erven-Grunwald-2014}.
+
 \section{OLO over Hilbert Spaces}
 
 The situation with algorithms for OLO over a Hilbert space $\H$ is very similar
@@ -227,7 +241,7 @@ handle any sequence of loss vectors in $\H$.
 
 Starting from \eqref{equation:ftrl-vanila}, if we choose learning rate $\eta =
 D/\sqrt{T}$, we get a family of algorithms parametrized by $D \in [0,\infty)$
-that satisfy an analogue bound of \eqref{equation:hedge-bound-3}:
+that satisfy an analogue of the bound \eqref{equation:hedge-bound-3}:
 \begin{equation}
 \label{equation:ftrl-vanila-3}
 \forall u \in \H \qquad \norm{u} \le D \quad  \Longrightarrow \quad \Regret_T(u) \le D \sqrt{T} \; .
@@ -295,6 +309,13 @@ are unlikely to satisfy the bound. The problem is interesting even for
 one-dimensional Hilbert space $\H = \R$. Also, the reductions in
 \cite{Orabona-Pal-2016-parameter-free} suggest that solving the
 one-dimensional problem solves the general Hilbert space and the LEA cases.
+
+Similar to LEA, attemps to solve the open problem included doubling trick on
+the maximum norm $\norm{\ell_t}$ seen so far. This approach fails the way as
+for LEA. A more promising approach is to use infinitely many copies of FTRL
+indexed by $i=1,2,\dots$, with scale-free learning rates
+$C_i/\sqrt{\sum_{j=1}^{t-1} \norm{\ell_j}^2}$ for suitable constants $C_i$ and
+combine their predictions using AdaHedge with non-uniform prior.
 
 \bibliography{biblio}
 
