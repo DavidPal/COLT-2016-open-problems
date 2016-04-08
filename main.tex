@@ -262,7 +262,7 @@ McMahan-Orabona-2014} that satisfy a slightly weaker version of
 \eqref{equation:olo-parameter-free}
 \begin{equation}
 \label{equation:olo-parameter-free-2}
-\forall u \in \H \qquad \Regret_T(u) \le \sqrt{(1 + \norm{u}) T} \polylog(1 + \norm{u}, T) \; ,
+\forall u \in \H \qquad \Regret_T(u) \le \norm{u} \sqrt{T} \polylog(1 + \norm{u}, T) \ + \ O(1) \; ,
 \end{equation}
 where $\polylog(1 + \norm{u}, T)$ represents a function that is upper bounded
 by a polynomial in $\log(1+\norm{u})$ and $\log T$.\footnote{It can be shown
@@ -290,11 +290,9 @@ Formally: \emph{Construct an algorithm (without any tuning parameters) that
 makes $O(1)$ vector operations in $\H$ and $O(1)$ other operations per round,
 and satisfies for any sequence of loss vectors $\{\ell_t\}_{t=1}^\infty$,
 $\ell_t \in \H$,}
-\begin{equation}
-\label{equation:hilbert-space-open-problem}
-\forall T \ge 0 \quad \forall u \in \H \qquad
-\Regret_T(u) \le \polylog(1 + \norm{u}, T) \cdot (1 + \norm{u}) \sqrt{T} \max_{1 \le t \le T} \norm{\ell_t} \; .
-\end{equation}
+$$
+\forall T \ge 0 \ \ \forall u \in \H \ \ \Regret_T(u) \le \polylog(1 + \norm{u}, T) \norm{u} \sqrt{T} \max_{1 \le t \le T} \norm{\ell_t} + O\left(\max_{1 \le t \le T} \norm{\ell_t} \right).
+$$
 We offer \$100 USD for a positive solution of this problem.  Here $\polylog(1 +
 \norm{u}, T)$ represents a function that is upper bounded by a polynomial in
 $\log(1+\norm{u})$ and $\log T$.
@@ -308,10 +306,10 @@ Similar to LEA, attempts to solve the open problem included doubling trick on
 the maximum norm $\norm{\ell_t}$ seen so far. This approach fails the same way
 as for LEA. Differently from the LEA case, running infinitely many copies of
 FTRL and combine their predictions using AdaHedge with a non-uniform prior is
-problematic because the predictions of the copies are not bounded. OLO over
-Hilbert space seems to be a harder problem than LEA and constructing even a
-computationally inefficient algorithm satisfying
-\eqref{equation:hilbert-space-open-problem} is an interesting open problem.
+problematic because the predictions of the copies are not bounded. The open
+problem for Hilbert space seems to be harder than the open problem than LEA,
+and constructing even a computationally inefficient algorithm is an interesting
+open problem.
 
 \bibliography{biblio}
 
