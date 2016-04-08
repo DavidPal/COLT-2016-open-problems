@@ -262,7 +262,7 @@ McMahan-Orabona-2014} that satisfy a slightly weaker version of
 \eqref{equation:olo-parameter-free}
 \begin{equation}
 \label{equation:olo-parameter-free-2}
-\forall u \in \H \qquad \Regret_T(u) \le \norm{u} \sqrt{T} \polylog(1 + \norm{u}, T) \ + \ O(1) \; ,
+\forall u \in \H \qquad \Regret_T(u) \le \norm{u} \sqrt{T} \polylog(1 + \norm{u}, T) \ + \ O(\sqrt{T}) \; ,
 \end{equation}
 where $\polylog(1 + \norm{u}, T)$ represents a function that is upper bounded
 by a polynomial in $\log(1+\norm{u})$ and $\log T$.\footnote{It can be shown
@@ -291,11 +291,12 @@ makes $O(1)$ vector operations in $\H$ and $O(1)$ other operations per round,
 and satisfies for any sequence of loss vectors $\{\ell_t\}_{t=1}^\infty$,
 $\ell_t \in \H$,}
 $$
-\forall T \ge 0 \ \ \forall u \in \H \ \ \Regret_T(u) \le \polylog(1 + \norm{u}, T) \norm{u} \sqrt{T} \max_{1 \le t \le T} \norm{\ell_t} + O\left(\max_{1 \le t \le T} \norm{\ell_t} \right).
+\forall T \ge 0 \ \ \forall u \in \H \ \ \Regret_T(u) \le \polylog(1 + \norm{u}) \norm{u} \sqrt{T} \max_{1 \le t \le T} \norm{\ell_t} + O(\sqrt{T}) \max_{1 \le t \le T} \norm{\ell_t}.
 $$
 We offer \$100 USD for a positive solution of this problem.  Here $\polylog(1 +
-\norm{u}, T)$ represents a function that is upper bounded by a polynomial in
-$\log(1+\norm{u})$ and $\log T$.
+\norm{u})$ represents a function that is upper bounded by a polynomial in
+$\log(1+\norm{u})$ and $O(\sqrt{T})$ represents a function
+bounded by a constant multiple of $\sqrt{T}$.
 
 The problem is interesting even for one-dimensional Hilbert space $\H = \R$.
 Also, the reductions in \cite{Orabona-Pal-2016-parameter-free} suggest that
