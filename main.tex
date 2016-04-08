@@ -146,7 +146,7 @@ Luo-Schapire-2014, Luo-Schapire-2015, Foster-Rakhlin-Sridharan-2015,
 Orabona-Pal-2016-parameter-free} on algorithms that satisfy slightly
 looser\footnote{Earlier papers have extra logarithmic factors.
 \citet{Foster-Rakhlin-Sridharan-2015, Orabona-Pal-2016-parameter-free} have
-only the extra $1+$ and fixed multiplicative constant hidden on $\widetilde
+a fixed multiplicative constant hidden in $\widetilde
 O(\cdot)$} versions of~\eqref{equation:parameter-free-bound-experts}
 \begin{equation}
 \label{equation:parameter-free-bound-experts-2}
@@ -262,10 +262,10 @@ McMahan-Orabona-2014} that satisfy a slightly weaker version of
 \eqref{equation:olo-parameter-free}
 \begin{equation}
 \label{equation:olo-parameter-free-2}
-\forall u \in \H \qquad \Regret_T(u) \le \norm{u} \sqrt{T} \polylog(1 + \norm{u}, T) \ + \ O(\sqrt{T}) \; ,
+\forall u \in \H \qquad \Regret_T(u) \le \big(O(1)+\polylog(1 + \norm{u})\norm{u} \big) \sqrt{T} \; ,
 \end{equation}
-where $\polylog(1 + \norm{u}, T)$ represents a function that is upper bounded
-by a polynomial in $\log(1+\norm{u})$ and $\log T$.\footnote{It can be shown
+where $\polylog(1 + \norm{u})$ represents a function that is upper bounded
+by a polynomial in $\log(1+\norm{u})$.\footnote{It can be shown
 that for OLO over Hilbert space the extra poly-logarithmic factor is
 necessary~\citep{McMahan-Abernethy-2013,Orabona-2013}.} Algorithms satisfying
 \eqref{equation:olo-parameter-free-2} are called \emph{parameter-free}, since
@@ -291,19 +291,18 @@ makes $O(1)$ vector operations in $\H$ and $O(1)$ other operations per round,
 and satisfies for any sequence of loss vectors $\{\ell_t\}_{t=1}^\infty$,
 $\ell_t \in \H$,}
 $$
-\forall T \ge 0 \ \ \forall u \in \H \ \ \Regret_T(u) \le \polylog(1 + \norm{u}) \norm{u} \sqrt{T} \max_{1 \le t \le T} \norm{\ell_t} + O(\sqrt{T}) \max_{1 \le t \le T} \norm{\ell_t}.
+\forall T \ge 0 \ \ \forall u \in \H \ \ \Regret_T(u) \le \big(O(1)+\polylog(1 + \norm{u})\norm{u}\big)  \sqrt{\sum_{t=1}^{T} \norm{\ell_t}^2}.
 $$
 We offer \$100 USD for a positive solution of this problem.  Here $\polylog(1 +
 \norm{u})$ represents a function that is upper bounded by a polynomial in
-$\log(1+\norm{u})$ and $O(\sqrt{T})$ represents a function
-bounded by a constant multiple of $\sqrt{T}$.
+$\log(1+\norm{u})$ and $O(1)$ represents a universal constant.
 
 The problem is interesting even for one-dimensional Hilbert space $\H = \R$.
-Also, the reductions in \cite{Orabona-Pal-2016-parameter-free} suggest that
-solving the one-dimensional problem solves the general Hilbert space and the
+Also, the reductions in \cite{Orabona-Pal-2016-parameter-free} implies that
+solving the one-dimensional problem solves both the general Hilbert space and the
 LEA cases.
 
-Similar to LEA, attempts to solve the open problem included doubling trick on
+Similar to LEA, attempts to solve the open problem included a doubling trick on
 the maximum norm $\norm{\ell_t}$ seen so far. This approach fails the same way
 as for LEA. Differently from the LEA case, running infinitely many copies of
 FTRL and combine their predictions using AdaHedge with a non-uniform prior is
