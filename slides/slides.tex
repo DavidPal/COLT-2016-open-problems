@@ -1,0 +1,88 @@
+\documentclass[usenames,dvipsnames]{beamer}
+
+\usefonttheme{serif}
+\setbeamertemplate{items}[circle]
+
+\usepackage{pxfonts}
+
+\usepackage{mathpazo}
+
+% \definecolor{red}{rgb}{1,0,0}
+
+\beamertemplatenavigationsymbolsempty
+
+\DeclareMathOperator*{\minimize}{minimize}
+\DeclareMathOperator*{\Exp}{\mathbf{E}}
+\DeclareMathOperator{\Regret}{Regret}
+\DeclareMathOperator{\Risk}{Risk}
+\DeclareMathOperator{\poly}{poly}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+\newcommand{\grad}{\nabla}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\norm}[1]{\left\|#1\right\|}
+
+\newcommand{\Cite}[1]{{\tiny \textcolor{Blue}{[#1]}}}
+
+\usepackage{soul}
+\makeatletter
+\newcommand\SoulColor{%
+\let\set@color\beamerorig@set@color
+\let\reset@color\beamerorig@reset@color}
+\makeatother
+\setstcolor{red}
+
+
+
+\title{Parameter-Free and Scale-Free \\ Online Algorithms}
+
+\date{June 23, 2016 \\ \tiny COLT 2016}
+\author{Francesco Orabona \and D\'avid P\'al}
+\institute{Yahoo Research NYC}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\maketitle
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Online Linear Optimization}
+
+For $t=1,2,\dots$
+\begin{itemize}
+\item predict $w_t \in K \subseteq \R^d$
+\item receive loss vector function $\ell_t \in \R^d$
+\item suffer loss $\langle \ell_t, w_t \rangle$
+\end{itemize}
+
+\vspace{0.5cm}
+$$
+\Regret_T(u) = \textcolor{ForestGreen}{\underbrace{\sum_{t=1}^T \langle \ell_t, w_t \rangle}_{\text{algorithm's loss}}} \ - \ \textcolor{red}{\underbrace{\sum_{t=1}^T \langle \ell_t, u \rangle}_{\text{comparator's loss}}}
+$$
+
+\vspace{0.5cm}
+
+We focus on:
+\begin{itemize}
+\item $K = \R^N$
+\item $K = \Delta_N = \{ x \in \R^N ~:~ x \ge 0, \norm{x}_1 = 1 \}$
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Two Forms of Adaptivity}
+
+\begin{itemize}
+\item Adaptivity to competitor $u$
+\item Adaptivity to scale of $\ell_1, \ell_2, \dots$
+\end{itemize}
+
+\end{frame}
+
+
+\end{document}
