@@ -4,8 +4,10 @@
 \setbeamertemplate{items}[circle]
 
 \usepackage{pxfonts}
-
 \usepackage{mathpazo}
+\usepackage{tcolorbox}
+\usepackage{soul}
+
 
 % \definecolor{red}{rgb}{1,0,0}
 
@@ -15,16 +17,16 @@
 \DeclareMathOperator*{\Exp}{\mathbf{E}}
 \DeclareMathOperator{\Regret}{Regret}
 \DeclareMathOperator{\Risk}{Risk}
-\DeclareMathOperator{\poly}{poly}
+\DeclareMathOperator{\polylog}{polylog}
 \DeclareMathOperator*{\argmin}{argmin}
 \DeclareMathOperator*{\argmax}{argmax}
-\newcommand{\grad}{\nabla}
 \newcommand{\R}{\mathbb{R}}
+\newcommand{\indicator}{\mathbf{1}}
 \newcommand{\norm}[1]{\left\|#1\right\|}
+\newcommand{\KL}[2]{D\left({#1}\middle\|{#2}\right)}
 
 \newcommand{\Cite}[1]{{\tiny \textcolor{Blue}{[#1]}}}
 
-\usepackage{soul}
 \makeatletter
 \newcommand\SoulColor{%
 \let\set@color\beamerorig@set@color
@@ -36,9 +38,9 @@
 
 \title{Parameter-Free and Scale-Free \\ Online Algorithms}
 
-\date{June 23, 2016 \\ \tiny COLT 2016}
+\date{June 26, 2016 \\ \tiny COLT 2016}
 \author{Francesco Orabona \and D\'avid P\'al}
-\institute{Yahoo Research NYC}
+\institute{Yahoo Research, New York}
 
 \begin{document}
 
@@ -60,16 +62,16 @@ For $t=1,2,\dots$
 
 \vspace{0.5cm}
 $$
-\Regret_T(u) = \textcolor{ForestGreen}{\underbrace{\sum_{t=1}^T \langle \ell_t, w_t \rangle}_{\text{algorithm's loss}}} \ - \ \textcolor{red}{\underbrace{\sum_{t=1}^T \langle \ell_t, u \rangle}_{\text{comparator's loss}}}
+\Regret_T(u) = \textcolor{ForestGreen}{\underbrace{\sum_{t=1}^T \langle \ell_t, w_t \rangle}_{\text{algorithm's loss}}} \ - \ \textcolor{red}{\underbrace{\sum_{t=1}^T \langle \ell_t, u \rangle}_{\text{competitor's loss}}}
 $$
 
 \vspace{0.5cm}
 
 We focus on:
-\begin{itemize}
+\begin{enumerate}
 \item $K = \R^N$
 \item $K = \Delta_N = \{ x \in \R^N ~:~ x \ge 0, \norm{x}_1 = 1 \}$
-\end{itemize}
+\end{enumerate}
 
 \end{frame}
 
@@ -77,11 +79,115 @@ We focus on:
 \begin{frame}
 \frametitle{Two Forms of Adaptivity}
 
-\begin{itemize}
-\item Adaptivity to competitor $u$
-\item Adaptivity to scale of $\ell_1, \ell_2, \dots$
-\end{itemize}
+\begin{enumerate}
+\item Adaptivity to competitor $u$ \qquad \qquad \textcolor{ForestGreen}{(parameter-free)}
+\item Adaptivity to scale of $\ell_1, \ell_2, \dots, \ell_T$ \qquad \qquad \textcolor{ForestGreen}{(scale-free)}
+\end{enumerate}
 
+\vspace{1cm}
+
+\begin{block}{Open Problem (Informal)}
+Design efficient \textbf{doubly adaptive} algorithms.
+\end{block}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{FTRL Bound}
+
+\begin{theorem}[\textcolor{Blue}{CBL'06, SS'11}]
+If $R:K \to \R$ is a non-negative $1$-strongly convex function w.r.t. $\norm{\cdot}$, then FTRL
+with regularizer $R$ and learning rate satisfies
+$$
+\forall u \in K \qquad  \Regret_T(u) \le \frac{R(u)}{\eta} + \eta \sum_{t=1}^T \|\ell_t\|_*^2
+$$
+\end{theorem}
+
+\textcolor{ForestGreen}{
+With learning rate $\eta = \sqrt{B/\sum_{t=1}^T \norm{\ell_t}_*^2}$
+$$
+u \ : \ R(u) \le B \qquad \Longrightarrow \qquad \Regret_T(u) \le 2 \sqrt{B \sum_{t=1}^T \norm{\ell_t}_*^2}
+$$}
+
+\textcolor{red}{Two cheats}
+\begin{enumerate}
+\item \textcolor{red}{Bound holds only for $u$ such that $R(u) \le B$}
+\item \textcolor{red}{Need to know $\sum_{t=1}^T \norm{\ell_t}_*^2$}
+\end{enumerate}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Existing Results for $K=\Delta_N$}
+
+Regularizer $R(u) = \KL{u}{\frac{1}{N} \indicator}$ \qquad $\sup_{u \in \Delta_N} R(u) = \ln N$
+
+\vspace{0.5cm}
+
+\begin{enumerate}
+
+\item For \textbf{any} $\ell_1, \ell_2, \dots, \ell_t \in \R^N$ \qquad \Cite{deREGK'11, OP'15}
+$$
+\Regret_T(u) \le \sqrt{\ln N \sum_{t=1}^T \norm{\ell_t}_\infty^2}
+$$
+
+\item Assuming that $\norm{\ell_t}_\infty \le 1$ \qquad \Cite{CFH'09, CV'10, LS'14, LS'15, KE'15, FRS'15, OP'16}
+$$
+\Regret_T(u) \le \sqrt{T \left(1 + \KL{u}{\tfrac{1}{N}\indicator}\right)}
+$$
+
+\item \emph{Inefficient}: For any $\ell_1, \ell_2, \dots, \ell_t \in \R^N$ \qquad  \Cite{FRS'15+OP'16}
+$$
+\Regret_T(u) \le \sqrt{(1 + \KL{u}{\tfrac{1}{N}\indicator}) \sum_{t=1}^T \norm{\ell_t}_\infty^2}
+$$
+\end{enumerate}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Existing Results for $K=\R^N$}
+
+Regularizer $R(u) = \frac{1}{2}\norm{u}_2^2$ \qquad $\sup_{u \in \R^N} R(u) = +\infty$
+
+\vspace{1cm}
+
+\begin{enumerate}
+
+\item For \textbf{any} $\ell_1, \ell_2, \dots, \ell_t \in \R^N$ \qquad \Cite{OP'15}
+$$
+\Regret_T(u) \le \left( 1+\norm{u}_2^2 \right) \sqrt{\sum_{t=1}^T \norm{\ell_t}_2^2} + \sqrt{T} \max_{1 \le t \le T} \norm{\ell_t}_2^2
+$$
+
+\item Assuming that $\norm{\ell_t}_2 \le 1$ \qquad \Cite{SM'12, O'13, MA'13, MO'14, O'14, OP'16}
+$$
+\Regret_T(u) \le \left( 1 + \norm{u}_2^{\textcolor{red}{1}} \right) \sqrt{T \log(1+\norm{u}_2)}
+$$
+\end{enumerate}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Open Problems}
+
+\begin{block}{Open Problem \#1}
+Find an algorithm for $K=\Delta_N$ with $O(N)$ per-round time complexity
+such that for \text{any} $\ell_1, \ell_2, \dots, \ell_T$
+$$
+\forall u \in \Delta_N \qquad
+\Regret_T(u) \le \sqrt{\left(1 + \KL{u}{\tfrac{1}{N}\indicator}\right) \sum_{t=1}^T \norm{\ell_t}_\infty^2}
+$$
+\end{block}
+
+\begin{block}{Open Problem \#2 --- \textcolor{ForestGreen}{Reward \$100 for positive solution}}
+Find an algorithm for $K=\R^N$ with $O(N)$ per-round time complexity
+such that for \text{any} $\ell_1, \ell_2, \dots, \ell_T$
+$$
+\forall u \in \R^N \quad
+\Regret_T(u) \le (1 + \norm{u}_2 \cdot \polylog(1+\norm{u}_2)) \sqrt{\sum_{t=1}^T \norm{\ell_t}_2^2}
+$$
+\end{block}
 \end{frame}
 
 
