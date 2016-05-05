@@ -168,7 +168,7 @@ $\{\ell_t\}_{t=1}^\infty$, $\ell_t \in \R^N$, any $T \ge 0$ and any $u \in
 \Delta_N$, AdaHedge satisfies $\Regret_T(u) \le 5.3 \sqrt{\ln N \sum_{t=1}^T
 \norm{\ell_t}_\infty^2}$. AdaHedge is \emph{scale-free} which means that its
 predictions $x_t$ are the same for $\{\ell_t\}_{t=1}^\infty$ and $\{c
-\ell_t\}_{t=1}^\infty$ where $c$ is any positive constant.
+\ell_t\}_{t=1}^\infty$, where $c$ is any positive constant.
 
 Our first open problem is to design an algorithm that combines the advantages
 of parameter-free and scale-free algorithms. More formally: \emph{Does there
@@ -181,7 +181,7 @@ vectors $\{\ell_t\}_{t=1}^\infty$, $\ell_t \in \R^N$,}
 \end{equation}
 
 Attempts to solve the open problem include all sorts of doubling tricks.
-For example, algorithm could keep an upper bound $B_t$ on $\max_{1 \le i \le t}
+For example, the algorithm could keep an upper bound $B_t$ on $\max_{1 \le i \le t}
 \norm{\ell_i}_\infty$, for example, of the form $B_t = \norm{\ell_1} 2^k$
 doubling whenever larger $\norm{\ell_t}_\infty$ is observed. However, resulting
 regret bounds might depend on $\log_2 \left( \frac{\max_{1 \le t \le T}
@@ -191,7 +191,7 @@ in the worst-case.
 A more promising approach is to use infinitely many copies of AdaHedge with
 learning rates $2^{-i}$, $i=1,2,\dots$, and combine their predictions using a
 master AdaHedge with a certain non-uniform prior distribution. However, the
-resulting algorithm runs in $\Theta(N \max_{u \in \Delta_N} \log \KL{u}{\pi})$ time.
+resulting algorithm runs in $\Theta(N \max_{u \in \Delta_N} \log \KL{u}{\pi})$ time per round.
 
 \section{OLO over Hilbert Spaces}
 
@@ -264,7 +264,7 @@ than \eqref{equation:ftrl-vanila-2}.
 Analogue of AdaHedge for OLO over Hilbert space is FTRL with adaptive learning
 rate $\eta_t = 1/\sqrt{\sum_{i=1}^{t-1} \norm{\ell_i}^2}$.
 \cite{Orabona-Pal-2015} (see also \cite{Orabona-Pal-2016-scale-free}) showed
-that the resulting algorithm is scale-free and for any sequence of loss vectors
+that the resulting algorithm is scale-free and, for any sequence of loss vectors
 $\{\ell_t\}_{t=1}^\infty$, $\ell_t \in \H$, it satisfies
 $$
 \forall T \ge 0 \quad \forall u \in \H \qquad \Regret_T(u) \le \left(6.25 + \frac{1}{2}\norm{u}^2 \right) \sqrt{T} \max_{1 \le t \le T} \norm{\ell_t} \; .
