@@ -71,7 +71,7 @@ by $\langle \cdot, \cdot \rangle$ its inner product, and by $\norm{\cdot}$ the
 induced norm. The negative Shannon entropy, $-H(u)$,
 defined on $\Delta_N$ is $1$-strongly convex with respect to $\norm{\cdot}_1$.
 The dual norm of $\norm{\cdot}_1$ is $\norm{\cdot}_\infty$.  The function $R(u)
-= \frac{1}{2}\norm{u}^2$ defined on Hilbert space with norm $\norm{\cdot}$ is
+= \frac{1}{2}\norm{u}^2$ defined on a Hilbert space with norm $\norm{\cdot}$ is
 $1$-strongly convex with respect to $\norm{\cdot}$.
 
 Follow The Regularized Leader (FTRL) algorithm with regularizer $R:K \to \R$
@@ -162,7 +162,7 @@ $\epsilon$.  These algorithms remove the first drawback of Hedge.
 
 The second drawback of Hedge is removed by the AdaHedge algorithm due to
 \cite{de-Rooij-van-Erven-Grunwald-Koolen-2014}; see
-also~\citep{Orabona-Pal-2016-parameter-free}. AdaHedge lifts the assumption
+also~\cite{Orabona-Pal-2016-parameter-free}. AdaHedge lifts the assumption
 $\ell_t \in [-1,1]^N$. Namely, for any sequence of loss vectors
 $\{\ell_t\}_{t=1}^\infty$, $\ell_t \in \R^N$, any $T \ge 0$ and any $u \in
 \Delta_N$, AdaHedge satisfies $\Regret_T(u) \le 5.3 \sqrt{\ln N \sum_{t=1}^T
@@ -172,12 +172,12 @@ predictions $x_t$ are the same for $\{\ell_t\}_{t=1}^\infty$ and $\{c
 
 Our first open problem is to design an algorithm that combines the advantages
 of parameter-free and scale-free algorithms. More formally: \emph{Does there
-exist a universal constant $C > 0$ and, for each $N \ge 2$, is there an
+exist a universal constant $C > 0$ and for each $N \ge 2$ and each $\pi \in \Delta_N$, is there an
 algorithm (without any tuning parameters) that runs in $O(N)$ time per round
 and satisfies, for any sequence of loss
 vectors $\{\ell_t\}_{t=1}^\infty$, $\ell_t \in \R^N$,}
 \begin{equation}
-\forall T \ge 0 \quad \forall u \in \Delta_N \qquad \Regret_T(u) \le C \sqrt{(1 + \ln N - H(u)) \sum_{t=1}^T \norm{\ell_t}_\infty^2} \ \ ?
+\forall T \ge 0 \quad \forall u \in \Delta_N \qquad \Regret_T(u) \le C \sqrt{(1 + \KL{u}{\pi}) \sum_{t=1}^T \norm{\ell_t}_\infty^2} \ \ ?
 \end{equation}
 
 Attempts to solve the open problem include all sorts of doubling tricks.
@@ -191,7 +191,7 @@ in the worst-case.
 A more promising approach is to use infinitely many copies of AdaHedge with
 learning rates $2^{-i}$, $i=1,2,\dots$, and combine their predictions using a
 master AdaHedge with a certain non-uniform prior distribution. However, the
-resulting algorithm runs in $\Theta(N \log \log N)$ time.
+resulting algorithm runs in $\Theta(N \max_{u \in \Delta_N} \log \KL{u}{\pi})$ time.
 
 \section{OLO over Hilbert Spaces}
 
@@ -246,7 +246,7 @@ than \eqref{equation:ftrl-vanila-2}.
 
 Similar to LEA, there have been a lot of work on algorithms
 \citep{Streeter-McMahan-2012, Orabona-2013, McMahan-Abernethy-2013,
-McMahan-Orabona-2014} that satisfy a slightly weaker version of
+McMahan-Orabona-2014, Orabona14} that satisfy a slightly weaker version of
 \eqref{equation:olo-parameter-free}
 \begin{equation}
 \label{equation:olo-parameter-free-2}
@@ -287,7 +287,7 @@ $\log(1+\norm{u})$ and $O(1)$ represents a universal constant.
 
 The problem is interesting even for one-dimensional Hilbert space $\H = \R$.
 Also, the reductions in \cite{Orabona-Pal-2016-parameter-free} implies that
-solving the one-dimensional problem solves both the general Hilbert space and the
+solving the one-dimensional problem might solve both the general Hilbert space and the
 LEA cases.
 
 Similar to LEA, attempts to solve the open problem included a doubling trick on
