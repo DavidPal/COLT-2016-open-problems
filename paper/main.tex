@@ -47,23 +47,20 @@ been designed. Is is possible to design algorithms that are simultaneously
 
 \section{Introduction}
 
-We consider the standard Online Linear Optimization (OLO)~\citep{Cesa-Bianchi-Lugosi-2006,
-Shalev-Shwartz-2011} setting. In each round $t$, an algorithm chooses a point $x_t$ from a convex \emph{decision set}
-$K$ and then receives a loss vector $\ell_t$. Algorithm's goal is to keep its
-\emph{regret} small, defined as the difference between its cumulative loss and the cumulative loss of hypothetical strategy that
-in every round chooses the same point $u \in K$, that is
-$$
-\Regret_T(u) = \sum_{t=1}^T \langle \ell_t, x_t \rangle - \sum_{t=1}^T \langle \ell_t, u \rangle \; .
-$$
+We consider the standard Online Linear Optimization
+(OLO)~\citep{Cesa-Bianchi-Lugosi-2006, Shalev-Shwartz-2011} setting. In each
+round $t$, an algorithm chooses a point $x_t$ from a convex \emph{decision set}
+$K$ and then receives a loss vector $\ell_t$. Regret of the algorithm w.r.t. $u
+\in K$ is $\Regret_T(u) = \sum_{t=1}^T \langle \ell_t, x_t \rangle -
+\sum_{t=1}^T \langle \ell_t, u \rangle$. The goal of the algorithm is to keep
+the regret small.
 
 We focus on two particular sets, the $N$-dimensional probability simplex
 $\Delta_N = \{ x \in \R^N ~:~ x \ge 0, \norm{x}_1 = 1\}$ and the Hilbert space.
 OLO over $\Delta_N$ is referred to as the problem of Learning with Expert
-Advice (LEA); it used as a way of combining $N$ predictors and in boosting. OLO
-over Hilbert space is the workhorse for learning of generalized linear models
-in very high dimension.
+Advice (LEA).
 
-We will use the following notation in the rest of this note. We denote by
+\textbf{Notation and preliminaries:} We denote by
 $\indicator$ the vector $(1,1,\dots,1) \in \R^N$. Shannon entropy $H(u) =
 -\sum_{i=1}^N u_i \ln u_i$ is defined for any $u \in \Delta_N$.  The
 Kullback-Leibler divergence $\KL{u}{v} = \sum_{i=1}^N u_i \ln(u_i/v_i)$ is
@@ -71,9 +68,7 @@ defined for any $u,v \in \Delta_N$. For any $p \in [1,\infty]$,
 $\norm{\cdot}_p$ denotes $p$-norm in $\R^N$.  We denote by $\norm{\cdot}_*$ the
 dual norm of a norm $\norm{\cdot}$.  If $\H$ is a real Hilbert space, we denote
 by $\langle \cdot, \cdot \rangle$ its inner product, and by $\norm{\cdot}$ the
-induced norm.
-
-We will use the following well know facts. The negative Shannon entropy, $-H(u)$,
+induced norm. The negative Shannon entropy, $-H(u)$,
 defined on $\Delta_N$ is $1$-strongly convex with respect to $\norm{\cdot}_1$.
 The dual norm of $\norm{\cdot}_1$ is $\norm{\cdot}_\infty$.  The function $R(u)
 = \frac{1}{2}\norm{u}^2$ defined on Hilbert space with norm $\norm{\cdot}$ is
@@ -90,9 +85,8 @@ The following theorem is a slight modification of \citet[Theorem 2.11]{Shalev-Sh
 If $R:K \to \R$ is $1$-strongly convex function with respect a norm
 $\norm{\cdot}$ then for any sequence $\{\ell_t\}_{t=1}^\infty$ such that
 $\|\ell_t\|_* \le 1$, FTRL with learning rate $\eta$ satisfies
-$$
-\forall T \ge 0 \quad \forall u \in K \qquad \Regret_T(u) \le \frac{R(u) - \inf_{v \in K} R(v)}{\eta} + \frac{\eta T}{2} \; .
-$$
+for all $T \ge 0$ and all $u \in K$,
+$\Regret_T(u) \le \frac{R(u) - \inf_{v \in K} R(v)}{\eta} + \frac{\eta T}{2}$.
 \end{theorem}
 
 \section{Learning with Expert Advice}
@@ -160,14 +154,11 @@ for any $\epsilon \in (0,1)$. Indeed, regret with respect to $(\epsilon N)$-th
 best expert is upper bounded by the regret with respect to the average of the
 top $\epsilon N$ experts, which can be expressed as the regret with respect to
 a competitor $u$ that, up to permutation of coordinates, has the form
-$$
-u = \left( 1/(\epsilon N), \dots, 1/(\epsilon N), 0, \dots, 0 \right) \; .
-$$
+$u = \left( 1/(\epsilon N), \dots, 1/(\epsilon N), 0, \dots, 0 \right)$.
 Such competitor satisfies $H(u) = \ln (\epsilon N)$ and the regret with respect
-to any such $u$ is $\widetilde O(\sqrt{T (1 + \ln(1/\epsilon)})$. In
-particular, the last bound does not depend on the number of experts $N$, only
-on the quantile $\epsilon$.  These algorithms remove the first drawback of
-Hedge.
+to any such $u$ is $\widetilde O(\sqrt{T (1 + \ln(1/\epsilon)})$. Namely, the
+last bound does not depend on the number of experts $N$, only on the quantile
+$\epsilon$.  These algorithms remove the first drawback of Hedge.
 
 The second drawback of Hedge is removed by the AdaHedge algorithm due to
 \cite{de-Rooij-van-Erven-Grunwald-Koolen-2014}; see
@@ -198,17 +189,15 @@ regret bounds might depend on $\log_2 \left( \frac{\max_{1 \le t \le T}
 in the worst-case.
 
 A more promising approach is to use infinitely many copies of AdaHedge with
-learning rates $2^{-i}$, $i=1,2,\dots$, and combine their predictions using
-a master AdaHedge with a certain non-uniform prior distribution. However, it is not clear how to run this
-algorithm in $O(N)$ time.
+learning rates $2^{-i}$, $i=1,2,\dots$, and combine their predictions using a
+master AdaHedge with a certain non-uniform prior distribution. However, the
+resulting algorithm runs in $\Theta(N \log \log N)$ time.
 
 \section{OLO over Hilbert Spaces}
 
 The situation with algorithms for OLO over a Hilbert space $\H$ is very similar
-to that of LEA.
-
-FTRL with regularizer
-$\frac{1}{2}\norm{u}^2$ and learning rate $\eta$ satisfies (cf. Theorem~\ref{theorem:ftrl-regret})
+to that of LEA. FTRL with regularizer $\frac{1}{2}\norm{u}^2$ and learning rate
+$\eta$ satisfies (cf. Theorem~\ref{theorem:ftrl-regret})
 \begin{equation}
 \label{equation:ftrl-vanila}
 \forall u \in \H \qquad \Regret_T(u) \le \frac{\norm{u}^2}{2\eta} + \frac{\eta T}{2},
@@ -216,7 +205,6 @@ $\frac{1}{2}\norm{u}^2$ and learning rate $\eta$ satisfies (cf. Theorem~\ref{the
 assuming that $\norm{\ell_1}, \norm{\ell_2}, \dots, \norm{\ell_T} \le 1$.
 Bound~\eqref{equation:ftrl-vanila} is a direct analogue of
 \eqref{equation:hedge-bound-2} for LEA.
-
 A simple choice $\eta = 1/\sqrt{T}$ leads to an algorithm that satisfies
 \begin{equation}
 \label{equation:ftrl-vanila-2}
@@ -305,7 +293,7 @@ LEA cases.
 Similar to LEA, attempts to solve the open problem included a doubling trick on
 the maximum norm $\norm{\ell_t}$ seen so far. This approach fails the same way
 as for LEA. Differently from the LEA case, running infinitely many copies of
-FTRL and combine their predictions using AdaHedge with a non-uniform prior is
+FTRL and combining their predictions using AdaHedge with a non-uniform prior is
 problematic because the predictions of the copies are not bounded. The open
 problem for Hilbert space seems to be harder than the open problem than LEA,
 and constructing even a computationally inefficient algorithm is an interesting
