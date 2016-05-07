@@ -11,5 +11,8 @@
 # Vim temporary files
 *.swp
 
+# MacOs
+.DS_Store
+
 main.pdf
 slides.pdf

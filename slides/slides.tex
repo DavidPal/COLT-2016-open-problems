@@ -138,10 +138,11 @@ $$
 \Regret_T(u) \le \sqrt{T \left(1 + \KL{u}{\tfrac{1}{N}\indicator}\right)}
 $$
 
-\item \emph{Inefficient}: For any $\ell_1, \ell_2, \dots, \ell_t \in \R^N$ \qquad  \Cite{FRS'15+OP'16}
+\item For any $\ell_1, \ell_2, \dots, \ell_t \in \R^N$ \qquad  \Cite{FRS'15+OP'16}
 $$
 \Regret_T(u) \le \sqrt{(1 + \KL{u}{\tfrac{1}{N}\indicator}) \sum_{t=1}^T \norm{\ell_t}_\infty^2}
 $$
+\emph{$O(N \log \log N)$ memory and time per round}
 \end{enumerate}
 \end{frame}
 
@@ -157,7 +158,7 @@ Regularizer $R(u) = \frac{1}{2}\norm{u}_2^2$ \qquad $\sup_{u \in \R^N} R(u) = +\
 
 \item For \textbf{any} $\ell_1, \ell_2, \dots, \ell_t \in \R^N$ \qquad \Cite{OP'15}
 $$
-\Regret_T(u) \le \left( 1+\norm{u}_2^2 \right) \sqrt{\sum_{t=1}^T \norm{\ell_t}_2^2} + \sqrt{T} \max_{1 \le t \le T} \norm{\ell_t}_2^2
+\Regret_T(u) \le \left( 1+\norm{u}_2^2 \right) \sqrt{\sum_{t=1}^T \norm{\ell_t}_2^2} + \sqrt{T} \max_{1 \le t \le T} \norm{\ell_t}_2
 $$
 
 \item Assuming that $\norm{\ell_t}_2 \le 1$ \qquad \Cite{SM'12, O'13, MA'13, MO'14, O'14, OP'16}
