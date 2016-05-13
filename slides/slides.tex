@@ -122,7 +122,7 @@ $$}
 \begin{frame}
 \frametitle{Existing Results for $K=\Delta_N$}
 
-Regularizer $R(u) = \KL{u}{\frac{1}{N} \indicator}$ \qquad $\sup_{u \in \Delta_N} R(u) = \ln N$
+Regularizer $R(u) = \KL{u}{\pi}$ \qquad $\sup_{u \in \Delta_N} R(u) = \max_{i} \ln\left(\frac{1}{\pi_i} \right)$
 
 \vspace{0.5cm}
 
@@ -130,19 +130,19 @@ Regularizer $R(u) = \KL{u}{\frac{1}{N} \indicator}$ \qquad $\sup_{u \in \Delta_N
 
 \item For \textbf{any} $\ell_1, \ell_2, \dots, \ell_t \in \R^N$ \qquad \Cite{deREGK'11, OP'15}
 $$
-\Regret_T(u) \le \sqrt{\ln N \sum_{t=1}^T \norm{\ell_t}_\infty^2}
+\Regret_T(u) \le \sqrt{\max_i \ln \left( \frac{1}{\pi_i} \right) \sum_{t=1}^T \norm{\ell_t}_\infty^2}
 $$
 
 \item Assuming that $\norm{\ell_t}_\infty \le 1$ \qquad \Cite{CFH'09, CV'10, LS'14, LS'15, KE'15, FRS'15, OP'16}
 $$
-\Regret_T(u) \le \sqrt{T \left(1 + \KL{u}{\tfrac{1}{N}\indicator}\right)}
+\Regret_T(u) \le \sqrt{T \left(1 + \KL{u}{\pi}\right)}
 $$
 
-\item For any $\ell_1, \ell_2, \dots, \ell_t \in \R^N$ \qquad  \Cite{FRS'15+OP'16}
+\item For \textbf{any} $\ell_1, \ell_2, \dots, \ell_t \in \R^N$ \qquad  \Cite{FRS'15+OP'16}
 $$
-\Regret_T(u) \le \sqrt{(1 + \KL{u}{\tfrac{1}{N}\indicator}) \sum_{t=1}^T \norm{\ell_t}_\infty^2}
+\Regret_T(u) \le \sqrt{(1 + \KL{u}{\pi}) \sum_{t=1}^T \norm{\ell_t}_\infty^2}
 $$
-\emph{$O(N \log \log N)$ memory and time per round}
+\emph{$O(N \max_{i} \log \log \frac{1}{\pi_i})$ memory and time per round}
 \end{enumerate}
 \end{frame}
 
@@ -174,10 +174,10 @@ $$
 
 \begin{block}{Open Problem \#1}
 Find an algorithm for $K=\Delta_N$ with $O(N)$ per-round time complexity
-such that for \text{any} $\ell_1, \ell_2, \dots, \ell_T$
+such that for \text{any} $\pi \in \Delta_N$ and $\ell_1, \ell_2, \dots, \ell_T$
 $$
 \forall u \in \Delta_N \qquad
-\Regret_T(u) \le \sqrt{\left(1 + \KL{u}{\tfrac{1}{N}\indicator}\right) \sum_{t=1}^T \norm{\ell_t}_\infty^2}
+\Regret_T(u) \le \sqrt{\left(1 + \KL{u}{\pi}\right) \sum_{t=1}^T \norm{\ell_t}_\infty^2}
 $$
 \end{block}
 
