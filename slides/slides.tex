@@ -38,8 +38,8 @@
 
 \title{\emph{Open Problem:} \\ Parameter-Free and Scale-Free \\ Online Algorithms}
 
-\date{June 26, 2016 \\ \tiny COLT 2016}
-\author{Francesco Orabona \and \textbf{D\'avid P\'al}}
+\date{June 25, 2016 \\ \vspace{1cm} \tiny COLT 2016}
+\author{Francesco Orabona \and \underline{\textbf{D\'avid P\'al}}}
 \institute{Yahoo Research, New York}
 
 \begin{document}
@@ -53,19 +53,23 @@
 \begin{frame}
 \frametitle{Online Linear Optimization}
 
+Given a convex set $K \subseteq \R^N$
+
+\vspace{0.3cm}
+
 For $t=1,2,\dots$
 \begin{itemize}
-\item predict $w_t \in K \subseteq \R^N$
+\item predict $w_t \in K$
 \item receive loss vector $\ell_t \in \R^N$
 \item suffer loss $\langle \ell_t, w_t \rangle$
 \end{itemize}
 
-\vspace{0.5cm}
+\vspace{0.3cm}
 $$
 \Regret_T(u) = \textcolor{ForestGreen}{\underbrace{\sum_{t=1}^T \langle \ell_t, w_t \rangle}_{\text{algorithm's loss}}} \ - \ \textcolor{red}{\underbrace{\sum_{t=1}^T \langle \ell_t, u \rangle}_{\text{competitor's loss}}}
 $$
 
-\vspace{0.5cm}
+\vspace{0.3cm}
 
 We focus on:
 \begin{enumerate}
@@ -77,11 +81,11 @@ We focus on:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
-\frametitle{Two Forms of Adaptivity}
+\frametitle{Two Types of Adaptivity}
 
 \begin{enumerate}
-\item Adaptivity to competitor $u$ \qquad \qquad \textcolor{ForestGreen}{(parameter-free)}
-\item Adaptivity to scale of $\ell_1, \ell_2, \dots, \ell_T$ \qquad \qquad \textcolor{ForestGreen}{(scale-free)}
+\item Adaptivity to competitor $u$ \qquad \textcolor{ForestGreen}{\tiny (parameter-free, quantile bounds, \dots)}
+\item Adaptivity to scale of $\ell_1, \ell_2, \dots, \ell_T$ \quad \textcolor{ForestGreen}{\tiny (scale-free, second-order bounds, \dots)}
 \end{enumerate}
 
 \vspace{1cm}
@@ -105,14 +109,14 @@ $$
 \end{theorem}
 
 \textcolor{ForestGreen}{
-With learning rate $\eta = \sqrt{B/\sum_{t=1}^T \norm{\ell_t}_*^2}$
+With learning rate $\eta = \sqrt{R(u)/\sum_{t=1}^T \norm{\ell_t}_*^2}$
 $$
-u \ : \ R(u) \le B \qquad \Longrightarrow \qquad \Regret_T(u) \le 2 \sqrt{B \sum_{t=1}^T \norm{\ell_t}_*^2}
+\Regret_T(u) \le \sqrt{R(u) \sum_{t=1}^T \norm{\ell_t}_*^2}
 $$}
 
 \textcolor{red}{Two cheats}
 \begin{enumerate}
-\item \textcolor{red}{Bound holds only for $u$ such that $R(u) \le B$}
+\item \textcolor{red}{Bound holds only for \textbf{fixed} $u$}
 \item \textcolor{red}{Need to know $\sum_{t=1}^T \norm{\ell_t}_*^2$}
 \end{enumerate}
 
@@ -128,7 +132,7 @@ Regularizer $R(u) = \KL{u}{\pi}$ \qquad $\sup_{u \in \Delta_N} R(u) = \max_{i} \
 
 \begin{enumerate}
 
-\item For \textbf{any} $\ell_1, \ell_2, \dots, \ell_t \in \R^N$ \qquad \Cite{deREGK'11, OP'15}
+\item For \textbf{any} $\ell_1, \ell_2, \dots, \ell_T \in \R^N$ \qquad \Cite{deREGK'11, OP'15}
 $$
 \Regret_T(u) \le \sqrt{\max_i \ln \left( \frac{1}{\pi_i} \right) \sum_{t=1}^T \norm{\ell_t}_\infty^2}
 $$
@@ -138,7 +142,7 @@ $$
 \Regret_T(u) \le \sqrt{T \left(1 + \KL{u}{\pi}\right)}
 $$
 
-\item For \textbf{any} $\ell_1, \ell_2, \dots, \ell_t \in \R^N$ \qquad  \Cite{FRS'15+OP'15}
+\item For \textbf{any} $\ell_1, \ell_2, \dots, \ell_T \in \R^N$ \qquad  \Cite{FRS'15+OP'15}
 $$
 \Regret_T(u) \le \sqrt{(1 + \KL{u}{\pi}) \sum_{t=1}^T \norm{\ell_t}_\infty^2}
 $$
@@ -156,7 +160,7 @@ Regularizer $R(u) = \frac{1}{2}\norm{u}_2^2$ \qquad $\sup_{u \in \R^N} R(u) = +\
 
 \begin{enumerate}
 
-\item For \textbf{any} $\ell_1, \ell_2, \dots, \ell_t \in \R^N$ \qquad \Cite{OP'15}
+\item For \textbf{any} $\ell_1, \ell_2, \dots, \ell_T \in \R^N$ \qquad \Cite{OP'15}
 $$
 \Regret_T(u) \le \left( 1+\norm{u}_2^2 \right) \sqrt{\sum_{t=1}^T \norm{\ell_t}_2^2} + \sqrt{T} \max_{1 \le t \le T} \norm{\ell_t}_2
 $$
